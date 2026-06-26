@@ -37,16 +37,48 @@ son hostname.
 `docker restart` = running->arrêter->running,  
 `docker rm` = deleted.
 
-- un docker compose ?
+- un docker compose ?  
+C'est un fichier .yml (YAML) qui permet de définir et gérer des applications multi-conteneurs.  
+Il contient toutes les informations nécessaire au bon fonctionnement de la structure tel que:  
+Les services, les réseaux, les volumes, les secrets, les commandes et les variables d'environnement.  
+Il définit le cycle de vie (démarrage/arrêt/rebuild).
 
-comment daemons fonctionne et pourquoi c'est une bonne ou mauvaise idée de les utiliser ?
+- YAML  
+YAML Ain't Markup Language = language de sérialisation de données de type `.yml`  
+syntaxe plus concise et une lisibilité accrue que JSON ou XML
+
+- un Dockerfile ?  
+C'est un fichier texte contenant les instructions pour construire une image `Docker` de manière reproductible.  
+<u>Bonnes pratiques</u>:  
+Utiliser des images de base officielles et légères (Alpine/Debian)  
+Créer un fichier `.dockerignore` (nodes_modules,.git)  
+Minimiser les couches : regrouper les RUN  
+Multi-stages build : images finales plus petites  
+Ne pas exécuter en root : `USER node`
+
+
+- daemons Docker ?  
+Le daemon Docker est le coeur du système.  
+Ecoute sur le socket Unix `/var/run/docker.sock`.  
+Gère les images, conteneurs, réseaux et volumes.  
+S'exécute en `root` par défault (attention sécurité)  
+Communique avec `contained` pour l'exécution.
 
 - PID 1:  
 Processus principal d'un conteneur qui reçoit les signaux (SIGTERM, SIGKILL),  
 doit gérer les processus orphelins (reaping),  
 Sa propre mort = arrêt du conteneur.
 
-- bonnes pratiques pour les dockerfiles.
+- bonnes pratiques pour les dockerfiles.  
+✅ Partition dédiée pour /var/lib/docker  
+✅ Rotation des logs configurée  
+✅ Utilisateurs non-root dans les conteneurs  
+n'ajouter au groupe `docker` que les utilisateurs de confiance, ou utiliser le mode `rootless`.  
+✅ Ressources limitées (CPU/RAM)  
+✅ Images officielles et régulièrement mises à jour  
+✅ Health checks sur tous les services  
+✅ Monitoring actif (Prometheus, Grafana)  
+✅ Backups automatisés des volumes  
 
 - NGINX, protocoles TLSv1.2 et TLSv1.3
 

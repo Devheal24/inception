@@ -38,7 +38,8 @@ inception/
 # <span style="color:white">Project description</span>
 
 ### Virtual Machines vs Docker :
-Une machine virtuelle aura son propre OS alors que le conteneur partage le Kernel avec l'hôte via des namespaces et des cgroups.  
+Une machine virtuelle aura son propre OS alors que les conteneurs partagent le Kernel de l'hôte, ce qui leur confère une plus grande légèreté.  
+Sa sécurité est gérée via des namespaces et des cgroups.  
 What is it ?  
 <details>
 <summary>Namespaces</summary>
@@ -56,7 +57,12 @@ Voici la liste des namespaces et leurs fonctions:
 
 <details>
 <summary>Cgroups</summary>
-Les Cgroups
+Les Cgroups sont des outils qui limitent et comptabilisent les ressources.
+
+- puissance CPU
+- taille Mémoire
+- lecture disque I/O
+- nombre de processus (PIDs)
 </details>
 
 ### Secrets vs Environment Variables :
