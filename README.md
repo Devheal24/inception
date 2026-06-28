@@ -1,3 +1,4 @@
+<a if="top"></a>
 *This project has been created as part of the 42 curriculum by mgarnier.*
 
 # <h1 align="center"><p style="font-size: 70px;"><span style="color:green">Inception</span></h1>
@@ -14,6 +15,8 @@
 
 This project is 
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ## Architecture
 
 ```text
@@ -25,15 +28,25 @@ inception/
 │   └── docker-compose.yml
 └── TODO.md
 ```
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
 # <span style="color:white">Instructions</span>
 
 `make`
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 # <span style="color:white">Resources</span>
 
+https://blog.stephane-robert.info/docs/conteneurisation/
+
+https://github.com/stephrobert/containers-training/blob/main/README.md
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
 # AI
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
 # <span style="color:white">Project description</span>
 
@@ -68,5 +81,39 @@ Les Cgroups sont des outils qui limitent et comptabilisent les ressources.
 ### Secrets vs Environment Variables :
 
 ### Docker Network vs Host Network :
+Docker Network allows to connect multiple contener between them and the outside.  
+Docker automaticaly create networks, thus conteners can communicate isolated or connected depends of the purpose. 
+Host Network is a default network created by Docker, it create a link between the host and the container.
 
 ### Docker Volumes vs Bind Mounts :
+Il existe 3 différents types de Docker Volume avec chacun ses particularités:  
+<details>
+<summary>Volume standard</summary>
+
+Celui-ci est créé via la commande: <code>docker volume create `name_of_volume`</code>.  
+Les données persistent même si le conteneur est supprimé.  
+Pour supprimer ce volume: `docker volume rm nom_du_volume`.  
+Pour supprimer les volumes inutilisés: `docker volume prune`.  
+Il est possible de créer un volume NFS local pour partager des données entre différents conteneurs, voici la commande correspondante:  
+<pre>docker volume create \
+  --driver local \
+  --opt type=nfs \
+  --opt o=addr=127.0.0.1,nolock,soft,rw \
+  --opt device=:/path/nfs \
+  mon_volume_nfs</pre>
+</details>
+<details>
+<summary>Bind mount</summary>
+
+Celui-ci nécessite au préalable la création d'un dossier local (hôte).  
+Puis lancer le conteneur avec la commande: <code>docker run -it --rm -v $(pwd)/nom_du_dossier:/app/data alpine sh</code>.  
+Les 2 dossiers sont liés entre eux et il est possible de partager des fichiers entre l'hôte et le conteneur via ces dossiers.
+</details>
+<details>
+<summary>tmpfs</summary>
+
+Celui-ci est créé lors du run du conteneur via la commande: <code>docker run -it --rm --tmpfs /nom_du_dossier:rw,size=64m alpine sh</code>.  
+Il s'agit d'un volume en interne du conteneur, en mémoire vive uniquement et qui sera détruit en même temps que le conteneur.
+</details>
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
