@@ -5,6 +5,7 @@
 - [Notions](#notions-à-apprendre)
 - [Commands](#commands)
 - [Security tests](#security-tests)
+- [Lien hôte et VM](#lien-entre-hote-et-vm)
 - [A faire](#a-faire)
 - [Savoir lire un Dockerfile](#savoir-lire-un-dockerfile)
 
@@ -252,6 +253,73 @@ On peut dès lors personnaliser le comportement d'arrêt du conteneur.
 
 - `SHELL`: définit le shell à utiliser pour exécuter les commandes dans le conteneur.  
 Par défaut, Docker utilise `/bin/sh -c`.
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
+---
+
+## **LIEN ENTRE HOTE ET VM**
+
+### Objectif:
+
+Utiliser une clé SSH présente sur la machine hôte depuis une VM.
+La clé privée reste uniquement sur l'hôte.
+### Dans l'hôte:
+1/ Récupérer l'IP de l'hôte:
+```bash
+ifconfig | awk '/inet 10\./ {print $2}'
+```
+
+2/ Créer un relais TCP sur un port entre 1024 et 49151:  
+```bash
+socat TCP-LISTEN:<port>,reuseaddr,fork UNIX-CONNECT:$SSH_AUTH_SOCK
+```
+
+3/ `⚠️Laisser ce terminal ouvert.`
+
+### Dans la VM:  
+1/ Installer socat sur la machine virtuelle:  
+```bash
+sudo apt install socat
+```
+
+2/ Supprimer l'ancien socket (si existant):
+```bash
+rm -f /tmp/ssh-agent.sock
+```
+
+3/ Créer un socket local qui pointe vers l'hôte:  
+```bash
+socat UNIX-LISTEN:/tmp/ssh-agent.sock,fork TCP:<IP_hôte>:<port>
+```
+
+4/ `⚠️Laisser ce terminal ouvert.`
+
+5/ Activer l'agent SSH dans la VM dans un nouveau terminal:
+```bash
+export SSH_AUTH_SOCK=/tmp/ssh-agent.sock
+```
+
+
+### Tester la connexion: 
+
+1/ Vérifier que la VM voit la clé :  
+```bash
+ssh-add -l
+```
+
+2/ Tester la connexion SSH:
+```bash
+ssh -T <site_du_repo>
+```
+
+3/ Si l'authentification fonctionne :
+
+```bash
+git clone <repo_git>
+```
+
+4/ Vous pouvez stopper les socat côté hôte et VM (le lien sera rompu).
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
