@@ -100,7 +100,15 @@ n'ajouter au groupe `docker` que les utilisateurs de confiance, ou utiliser le m
 ✅ Monitoring actif (Prometheus, Grafana)  
 ✅ Backups automatisés des volumes  
 
-- **NGINX, protocoles TLSv1.2 et TLSv1.3**
+- **NGINX, protocoles TLSv1.2 et TLSv1.3**  
+**- Nginx** est un serveur web pour fichiers statique(HTML, CSS, JS, images).  
+Un reverse proxy haute performance pour transmettre les requêtes à des applications backend.  
+Un load balancer pour répartir le trafic entre plusieurs serveurs.  
+Un cache pour accélérer les réponses.  
+**- TLS** est un protocole de chiffrement de données.  
+v1.2 et v1.3 sont ses dernières versions stables et sécurisées.  
+Il s'occupe de masquer les données provenant de tiers via une suite de chiffrement décidée lors du premier contact (négociation).  
+Il garantit l'authentification des parties qui échangent et il s'assure de l'intégrité des données transmises.
 
 - **php-fpm**
 

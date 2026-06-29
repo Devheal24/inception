@@ -1,0 +1,27 @@
+services:
+  wordpress:
+    image: wordpress:latest
+    ports:
+      - "8080:80"
+    environment:
+      WORDPRESS_DB_HOST: mysql
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: wordpress_password
+      WORDPRESS_DB_NAME: wordpress
+    depends_on:
+      - mysql
+    restart: unless-stopped
+
+  mysql:
+    image: mysql:8.0
+    environment:
+      MYSQL_DATABASE: wordpress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: wordpress_password
+      MYSQL_ROOT_PASSWORD: root_secret_password
+    volumes:
+      - db_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  db_data:

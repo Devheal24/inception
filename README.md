@@ -51,6 +51,8 @@ inception/
 
 [ALPINE](https://alpinelinux.org/releases/)
 
+[NGINX](https://hub.docker.com/_/nginx?tag=stable-alpine3.23-perl)
+
 [HADOLINT](https://github.com/hadolint/hadolint)
 
 [TRIVY](https://trivy.dev/docs/latest/getting-started/installation/)

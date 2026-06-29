@@ -1,3 +1,5 @@
+<h1>USER DOCUMENTATION</h1>
+
 ◦ Understand what services are provided by the stack.
 
 

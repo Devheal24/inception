@@ -1,3 +1,4 @@
+<h1>DEVELOPER DOCUMENTATION</h1>
 ◦ Set up the environment from scratch (prerequisites, configuration files, se-
 crets).
 
