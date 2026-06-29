@@ -1,14 +1,19 @@
 # TODO
+<a if="top"></a>
 
 ## Summary
 - [Notions](#notions-à-apprendre)
 - [Commands](#commands)
+- [Security tests](#security-tests)
 - [A faire](#a-faire)
+- [Savoir lire un Dockerfile](#savoir-lire-un-dockerfile)
+
+---
 
 ## Notions à apprendre
 
 ### Qu'est ce que ?
-- une image Docker ?  
+- **une image Docker** ?  
 C'est un modèle immutable(read-only) utilisé pour créer des conteneurs.  
 Comme une classe qui définit la structure mais ne s'exécute pas elle-même.  
 Elle contient un système de fichiers de base (OS minimal),  
@@ -17,7 +22,7 @@ le code de l'application,
 les variables d'environnement,  
 la commande de démarrage.
 
-- layers  
+- **layers**  
 Une image utilise un système de couches = layers.  
 Un layer correspond à chaque instruction (RUN, COPY, ADD, etc) du Dockerfile.  
 Exemple:  
@@ -31,14 +36,14 @@ Layer 3 = copie du site
 Layer 4 = métadonnées (CMD...)  
 Avantages = partage, cache, téléchargements, immutabilité, reconstruction rapide.
 
-- un conteneur ?  
+- **un conteneur** ?  
 C'est une instance éphémère d'une image en cours d'exécution.  
 Il contient son propre système de fichiers (système de fichiers basé sur l'image + une couche d'écriture (writable layer)),  
 son espace réseau,  
 son arborescence de processus (PID),  
 son hostname.
 
-- cycle de vie d'un conteneur  
+- **cycle de vie d'un conteneur**  
 `docker create` = created,  
 `docker start` = running,  
 `docker run` = running (create + start),  
@@ -49,16 +54,16 @@ son hostname.
 `docker restart` = running->arrêter->running,  
 `docker rm` = deleted.
 
-- un docker compose ?  
+- **un docker compose** ?  
 C'est un fichier .yml (YAML) qui permet de définir et gérer des applications multi-conteneurs.  
 Il contient toutes les ressources nécessaire au bon fonctionnement de la structure tel que:  
 Les services, les réseaux, les volumes, les secrets, les commandes et les variables d'environnement.  
 Il définit le cycle de vie (démarrage/arrêt/rebuild).
 
-- YAML  
+- **YAML**  
 YAML Ain't Markup Language = format de sérialisation de données de type `.yml` privilégiant la lisibilité humaine.
 
-- un Dockerfile ?  
+- **un Dockerfile** ?  
 C'est un fichier texte contenant les instructions pour construire une image `Docker` de manière reproductible.  
 <u>Bonnes pratiques</u>:  
 Utiliser des images de base officielles et légères (Alpine/Debian)  
@@ -70,20 +75,20 @@ Combiner apt update && apt install dans le même RUN
 Supprimer les caches inutiles
 Épingler les versions lorsque c'est pertinent
 
-- daemons Docker ?  
+- **daemons Docker** ?  
 Le daemon Docker est le coeur du système.  
 Ecoute sur le socket Unix `/var/run/docker.sock`.  
 Gère les images, conteneurs, réseaux et volumes.  
 S'exécute en `root` par défault (attention sécurité)  
 Communique avec `containerd` pour l'exécution.
 
-- PID 1:  
+- **PID 1**:  
 Processus principal d'un conteneur qui reçoit les signaux (SIGTERM, SIGKILL),  
 doit gérer les processus orphelins (reaping).  
 Si pas gérer correctement, le conteneur peut ne pas s'arrêter proprement.
 Sa propre mort = arrêt du conteneur.
 
-- bonnes pratiques pour les dockerfiles.  
+- **bonnes pratiques pour les dockerfiles**.  
 ✅ Partition dédiée pour /var/lib/docker  
 ✅ Rotation des logs configurée  
 ✅ Utilisateurs non-root dans les conteneurs  
@@ -94,19 +99,26 @@ n'ajouter au groupe `docker` que les utilisateurs de confiance, ou utiliser le m
 ✅ Monitoring actif (Prometheus, Grafana)  
 ✅ Backups automatisés des volumes  
 
-- NGINX, protocoles TLSv1.2 et TLSv1.3
+- **NGINX, protocoles TLSv1.2 et TLSv1.3**
 
-- php-fpm
+- **php-fpm**
 
-- MariaDB
+- **MariaDB**
 
-- latest tag
+- **latest tag**:  
+Lors du choix de l'image de base, ce tag est celui par défaut qui va prendre la dernière version de l'image choisie.  
+Le principal soucis de ce tag est qu'il peut changer en fonction des mises à jour et se retrouver incompatible avec votre utilisation.  
+Il est préférable de définir son tag précisemment avec la version voulue pour stabilisé le résultat.
 
-- docker secrets
+- **docker secrets**  
 
-- credentials, API keys
+- **credentials, API keys**  
 
-- pourquoi le port 443
+- **pourquoi le port 443**  
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
+---
 
 ## Commands
 
@@ -176,16 +188,76 @@ n'ajouter au groupe `docker` que les utilisateurs de confiance, ou utiliser le m
 
 ---
 
-### **SECURITY TESTS**
+## **SECURITY TESTS**
 
 - `trivy image --severity HIGH,CRITICAL <image>`: scan an image for high and critical vulnerabilities.
 - `trivy fs .`: scan the current directory for vulnerabilities and secrets.
 - `docker scout quickview <image>`: display a quick security overview of an image.
 - `docker scout cves <image>`: list known vulnerabilities (CVEs) found in an image.
 - `docker bench security`: run Docker security best-practice checks.
+- `hadolint` is a Dockerfile tester.  
+1# pull his image first:  
+`docker pull hadolint/hadolint`  
+2# run it:  
+`docker run --rm -i hadolint/hadolint < <Dockerfile> > <outfile>`
 
 
-## A faire
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
+---
+
+## **SAVOIR LIRE UN DOCKERFILE**
+
+Un fichier Dockerfile est une suite d'instructions qui va transformer le code en image de conteneur.  
+Ces instructions suivent une syntaxe simple et lisible, Instruction suivie d'un ou plusieurs arguments qui définissent les détails de l'action:  
+<pre>INSTRUCTION argument1 argument2</pre>  
+Voici la liste de ces instructions:
+
+- `FROM`: définit l'image de base.  
+En option, il est possible de préciser la version souhaitée via `<image>[:tag]` ou `<image>[@<digest>]`.  
+MAIS préciser la version est une pratique fortement conseillée pour s'assurer la stabilité de l'image de conteneur.
+
+- `LABEL`: ajoute des informations sous forme de clés/valeurs `<key>=<value>`.
+
+- `ONBUILD`: définit une instruction qui sera exécutée lorsque cette image sera utilisée comme image de base pour une autre image.
+
+- `ARG`: définit des variables via `<name>[=<default value>]` puis utilisable via `${name}`.
+
+- `ENV`: définit des variables d'environnement persistantes qui seront disponibles au moment de l'exécution de l'image de conteneur via `<key>=<value>`.
+
+- `RUN`: lance des commandes lors de la construction de l'image.  
+Il est conseillé d'enchainer les commandes avec la séquence `&&` et si saut de ligne `&&\`.
+
+- `COPY`: perment d'intégrer des fichiers et/ou dossiers pour les ajouter au système de fichiers de l'image dans le répertoire définit.  
+Exemple: `COPY . /app`.
+
+- `ADD`: comme `COPY` pour les URL.
+
+- `USER`: définit l'utilisateur (UID) et éventuellement le groupe d'utilisateurs (GID).  
+L'UID sera utilisé pour les instructions RUN et pour l'exécution de l'image de conteneur.
+
+- `WORKDIR`: définit le répertoire de travail pour toutes les instructions qui la suivent dans le Dockerfile.  
+Si non précisé il sera créé par défaut.
+
+- `VOLUME`: créer un dossier monté en externe qui persistera à l'arrêt du conteneur.
+
+- `EXPOSE`: permet d'écouter sur les ports réseaux au moment de l'exécution.
+
+- `CMD`/`ENTRYPOINT`: définit les commandes qui seront exécutées au lancement de l'image de conteneur.
+
+- `HEALTHCHECK`: définit une commande qui sera exécutée périodiquement pour vérifier la bonne santé du conteneur.
+
+- `STOPSIGNAL`: définit le signal qui sera envoyé au conteneur lorsqu'il sera arrêté.  
+On peut dès lors personnaliser le comportement d'arrêt du conteneur.
+
+- `SHELL`: définit le shell à utiliser pour exécuter les commandes dans le conteneur.  
+Par défaut, Docker utilise `/bin/sh -c`.
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
+---
+
+## **A FAIRE**
 
 créer une machine virtuelle sous Debian
 
@@ -220,3 +292,7 @@ utiliser environement variables + stocker dans un .env.
 les credentials, API keys et password doivent etre sauvegardé localement et ignoré par git.
 
 documenter les *.md
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
+---

@@ -1,9 +1,10 @@
-<a if="top"></a>
 *This project has been created as part of the 42 curriculum by mgarnier.*
 
-# <h1 align="center"><p style="font-size: 70px;"><span style="color:green">Inception</span></h1>
+<a if="top"></a>
 
-## Summary
+# <h1 align="center"><p style="font-size: 70px;"><span style="color:white">Inception</span></h1>
+
+## <span style="color:white">Summary</span>
 - [Description](#description)
 - [Architecture](#architecture)
 - [Instructions](#instructions)
@@ -11,13 +12,15 @@
 - [AI](#ai)
 - [Project description](#project-description)
 
+---
+
 # <span style="color:white">Description</span>
 
 This project is 
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
-## Architecture
+## <span style="color:white">Architecture</span>
 
 ```text
 inception/
@@ -30,21 +33,33 @@ inception/
 ```
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
+---
+
 # <span style="color:white">Instructions</span>
 
 `make`
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
+---
+
 # <span style="color:white">Resources</span>
 
-https://blog.stephane-robert.info/docs/conteneurisation/
+[DOCKER TUTORIAL](https://blog.stephane-robert.info/docs/conteneurisation/)
 
-https://github.com/stephrobert/containers-training/blob/main/README.md
+[TRAINING DOCKER](https://github.com/stephrobert/containers-training/blob/main/README.md)
+
+[ALPINE](https://alpinelinux.org/releases/)
+
+[HADOLINT](https://github.com/hadolint/hadolint)
+
+[TRIVY](https://trivy.dev/docs/latest/getting-started/installation/)
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
-# AI
+---
+
+# <span style="color:white">AI</span>
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -82,7 +97,7 @@ Les Cgroups sont des outils qui limitent et comptabilisent les ressources.
 
 ### Docker Network vs Host Network :
 Docker Network allows to connect multiple contener between them and the outside.  
-Docker automaticaly create networks, thus conteners can communicate isolated or connected depends of the purpose. 
+Docker automaticaly create networks, thus conteners can communicate isolated or connected depends of the purpose.  
 Host Network is a default network created by Docker, it create a link between the host and the container.
 
 ### Docker Volumes vs Bind Mounts :
@@ -117,3 +132,5 @@ Il s'agit d'un volume en interne du conteneur, en mémoire vive uniquement et qu
 </details>
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
+---
