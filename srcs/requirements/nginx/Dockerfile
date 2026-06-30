@@ -1,7 +1,19 @@
-ARG NGINX_IMAGE=nginx:1.31.2-alpine@sha256:54f2a904c251d5a34adf545a72d32515a15e08418dae0266e23be2e18c66fefa
+ARG ALPINE_IMAGE
 
-FROM ${NGINX_IMAGE}
+FROM ${ALPINE_IMAGE}
 
-COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+RUN apk add --no-cache nginx openssl && \
+    mkdir -p /etc/nginx/ssl && \
+    openssl req -x509 \
+    -nodes \
+    -days 365 \
+    -newkey rsa:2048 \
+    -keyout /etc/nginx/ssl/server.key \
+    -out /etc/nginx/ssl/server.crt \
+    -subj "/CN=localhost"
+
+COPY nginx.conf /etc/nginx/http.d/nginx.conf
 
 EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]

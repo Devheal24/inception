@@ -1,27 +1,21 @@
 services:
-  wordpress:
-    image: wordpress:latest
+  nginx:
+    build:
+      context: ./requirements/nginx
+      args:
+        ALPINE_IMAGE: ${ALPINE_IMAGE}
     ports:
-      - "8080:80"
-    environment:
-      WORDPRESS_DB_HOST: mysql
-      WORDPRESS_DB_USER: wordpress
-      WORDPRESS_DB_PASSWORD: wordpress_password
-      WORDPRESS_DB_NAME: wordpress
-    depends_on:
-      - mysql
-    restart: unless-stopped
+    - "443:443"
+    restart: on-failure
 
-  mysql:
-    image: mysql:8.0
-    environment:
-      MYSQL_DATABASE: wordpress
-      MYSQL_USER: wordpress
-      MYSQL_PASSWORD: wordpress_password
-      MYSQL_ROOT_PASSWORD: root_secret_password
-    volumes:
-      - db_data:/var/lib/mysql
-    restart: unless-stopped
+  wordpress:
+    build:
+      context: ./requirements/wordpress
+      args:
+        ALPINE_IMAGE: ${ALPINE_IMAGE}
 
-volumes:
-  db_data:
+  mariadb:
+    build:
+      context: ./requirements/mariadb
+      args:
+        ALPINE_IMAGE: ${ALPINE_IMAGE}
