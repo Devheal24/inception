@@ -41,7 +41,12 @@ Ajouter l'utilisateur au groupe sudo :
 usermod -aG sudo $USER
 ```
 
-Redémarrer la session :
+Actualiser le groupe :
+
+```bash
+newgrp sudo
+```
+Sortir du bash :
 
 ```bash
 exit
