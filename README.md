@@ -1,8 +1,9 @@
 *This project has been created as part of the 42 curriculum by mgarnier.*
 
-<a if="top"></a>
+---
+<a id="top"></a>
 
-# <h1 align="center"><p style="font-size: 70px;"><span style="color:white">Inception</span></h1>
+<h1 align="center"><p style="font-size: 70px;"><span style="color:white">Inception</span></h1>
 
 ## <span style="color:white">Summary</span>
 - [Description](#description)
@@ -16,7 +17,25 @@
 
 # <span style="color:white">Description</span>
 
-This project is 
+Inception is a 42 school project whose goal is to build a small
+infrastructure entirely with Docker. Every service runs in its own
+container, built from a custom Dockerfile on a lightweight Alpine base
+image — no pre-built service images, no `latest` tag.
+
+The stack is orchestrated with a single `docker-compose.yml` and made up of
+three containers:
+- **NGINX**, the only entry point, serving everything over TLS (v1.2/v1.3
+  only) with a self-signed certificate for `mgarnier.42.fr`.
+- **WordPress** with **php-fpm** (no web server bundled in this container),
+  bootstrapped and configured on first boot with WP-CLI.
+- **MariaDB**, holding the WordPress database, with no web server either.
+
+Containers communicate over a dedicated Docker network, restart
+automatically on failure, and are subject to CPU/memory limits. Database
+and website data are kept in two named Docker volumes pinned to
+`/home/mgarnier/data` on the host, so they survive container recreation.
+Credentials (database passwords, WordPress admin password) are handled with
+Docker secrets rather than plain environment variables.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -28,7 +47,7 @@ inception/
 ├── Makefile
 ├── README.md
 ├── srcs
-│   └── docker-compose.yml
+│   └── docker-compose.yml
 └── TODO.md
 ```
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
@@ -37,7 +56,22 @@ inception/
 
 # <span style="color:white">Instructions</span>
 
-`make`
+`make` builds and starts the whole stack (equivalent to `make all`).
+
+| Command | What it does |
+|---|---|
+| `make` / `make all` | Build the images and start the containers |
+| `make build` | Build the images without starting the containers |
+| `make up` | Build (if needed) and start the containers in the background |
+| `make down` | Stop and remove the containers |
+| `make stop` | Stop the containers without removing them |
+| `make start` | Start previously stopped containers |
+| `make restart` | Restart the containers |
+| `make logs` | Follow the logs of all containers |
+| `make ps` | List the status of the project's containers |
+| `make clean` | Alias for `make down` |
+| `make fclean` | Remove containers, named volumes and images |
+| `make re` | `make fclean` followed by `make all` |
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -68,69 +102,69 @@ inception/
 # <span style="color:white">Project description</span>
 
 ### Virtual Machines vs Docker :
-Une machine virtuelle aura son propre OS alors que les conteneurs partagent le Kernel de l'hôte, ce qui leur confère une plus grande légèreté.  
-Sa sécurité est gérée via des namespaces et des cgroups.  
-What is it ?  
+A virtual machine has its own OS, whereas containers share the host's kernel, which makes them much lighter.  
+Its security is handled through namespaces and cgroups.  
+What is it?  
 <details>
 <summary>Namespaces</summary>
-Les namespaces sont des outils d'isolation qui permettent de cloisonner des ressources spécifiques du système pour chaque application ou processus.
+Namespaces are isolation tools that partition specific system resources for each application or process.
 
-Voici la liste des namespaces et leurs fonctions:
+Here is the list of namespaces and their functions:
 
-- **PID Namespace** 	(Isolation des processus)  
-- **Network Namespace** (Isolation réseau)  
-- **Mount Namespace** 	(Isation du Système de Fichiers)  
-- **UTS Namespace** 	(Isolation du Nom d'Hôte)  
-- **IPC Namespace** 	(Isolation de la Communication Inter-Processus)  
-- **User Namespace** 	(Isolation des Permissions)
+- **PID Namespace** 	(Process isolation)  
+- **Network Namespace** (Network isolation)  
+- **Mount Namespace** 	(Filesystem isolation)  
+- **UTS Namespace** 	(Hostname isolation)  
+- **IPC Namespace** 	(Inter-process communication isolation)  
+- **User Namespace** 	(Permission isolation)
 </details>
 
 <details>
 <summary>Cgroups</summary>
-Les Cgroups sont des outils qui limitent et comptabilisent les ressources.
+Cgroups are tools that limit and account for resource usage.
 
-- puissance CPU
-- taille Mémoire
-- lecture disque I/O
-- nombre de processus (PIDs)
+- CPU power
+- Memory size
+- Disk I/O
+- Number of processes (PIDs)
 </details>
 
 ### Secrets vs Environment Variables :
 
 ### Docker Network vs Host Network :
-Docker Network allows to connect multiple contener between them and the outside.  
-Docker automaticaly create networks, thus conteners can communicate isolated or connected depends of the purpose.  
-Host Network is a default network created by Docker, it create a link between the host and the container.
+Docker Network allows multiple containers to connect to each other and to the outside world.  
+Docker automatically creates networks, so containers can communicate in isolation or be connected together depending on the purpose.  
+Host Network is a default network created by Docker; it creates a direct link between the host and the container.
 
 ### Docker Volumes vs Bind Mounts :
-Il existe 3 différents types de Docker Volume avec chacun ses particularités:  
+There are 3 different types of Docker Volumes, each with its own characteristics:  
 <details>
-<summary>Volume standard</summary>
+<summary>Standard volume</summary>
 
-Celui-ci est créé via la commande: <code>docker volume create `name_of_volume`</code>.  
-Les données persistent même si le conteneur est supprimé.  
-Pour supprimer ce volume: `docker volume rm nom_du_volume`.  
-Pour supprimer les volumes inutilisés: `docker volume prune`.  
-Il est possible de créer un volume NFS local pour partager des données entre différents conteneurs, voici la commande correspondante:  
+This one is created with the command: <code>docker volume create volume_name</code>.  
+Data persists even if the container is removed.  
+To remove this volume: `docker volume rm volume_name`.  
+To remove unused volumes: `docker volume prune`.  
+It is possible to create a local NFS volume to share data between different containers; here is the corresponding command:  
 <pre>docker volume create \
   --driver local \
   --opt type=nfs \
   --opt o=addr=127.0.0.1,nolock,soft,rw \
   --opt device=:/path/nfs \
-  mon_volume_nfs</pre>
+  my_nfs_volume</pre>
 </details>
 <details>
 <summary>Bind mount</summary>
 
-Celui-ci nécessite au préalable la création d'un dossier local (hôte).  
-Puis lancer le conteneur avec la commande: <code>docker run -it --rm -v $(pwd)/nom_du_dossier:/app/data alpine sh</code>.  
-Les 2 dossiers sont liés entre eux et il est possible de partager des fichiers entre l'hôte et le conteneur via ces dossiers.
+This one first requires creating a local (host) folder.  
+Then launch the container with the command: <code>docker run -it --rm -v $(pwd)/folder_name:/app/data alpine sh</code>.  
+The two folders are linked together, making it possible to share files between the host and the container through them.
 </details>
 <details>
 <summary>tmpfs</summary>
 
-Celui-ci est créé lors du run du conteneur via la commande: <code>docker run -it --rm --tmpfs /nom_du_dossier:rw,size=64m alpine sh</code>.  
-Il s'agit d'un volume en interne du conteneur, en mémoire vive uniquement et qui sera détruit en même temps que le conteneur.
+This one is created when the container runs, via the command: <code>docker run -it --rm --tmpfs /folder_name:rw,size=64m alpine sh</code>.  
+It is an internal container volume, stored in RAM only, and it is destroyed at the same time as the container.
 </details>
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>

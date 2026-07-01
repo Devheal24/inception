@@ -1,15 +1,30 @@
-# Installation de l'environnement Docker sur Debian
+<a id="top"></a>
 
-## Préparation du système
+<h1 align="center"><p style="font-size: 70px;"><span style="color:white">Installing the Docker environment on Debian</span></h1>
 
-Mettre à jour les paquets :
+## <span style="color:white">Summary</span>
+- [System preparation](#system-preparation)
+- [Sudo user configuration](#sudo-user-configuration)
+- [Installing Docker Engine](#installing-docker-engine)
+- [Adding the user to the Docker group](#adding-the-user-to-the-docker-group)
+- [Docker Compose verification](#docker-compose-verification)
+- [Docker test](#docker-test)
+- [Installing Trivy](#installing-trivy)
+- [Installing Firefox (if missing)](#installing-firefox-if-missing)
+- [Final verification](#final-verification)
+
+---
+
+# <span style="color:white">System preparation</span>
+
+Update the packages:
 
 ```bash
 sudo apt update
 sudo apt upgrade -y
 ```
 
-Installer les outils nécessaires :
+Install the required tools:
 
 ```bash
 sudo apt install -y \
@@ -23,52 +38,56 @@ sudo apt install -y \
     wget
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Configuration utilisateur sudo
+# <span style="color:white">Sudo user configuration</span>
 
-Si l'utilisateur courant n'a pas les droits sudo :
+If the current user doesn't have sudo rights:
 
-Passer en root :
+Switch to root:
 
 ```bash
 su -
 ```
 
-Ajouter l'utilisateur au groupe sudo :
+Add the user to the sudo group:
 
 ```bash
 usermod -aG sudo $USER
 ```
 
-Actualiser le groupe :
+Refresh the group:
 
 ```bash
 newgrp sudo
 ```
-Sortir du bash :
+Exit the shell:
 
 ```bash
 exit
 ```
 
-Puis vérifier :
+Then check:
 
 ```bash
 sudo whoami
 ```
 
-Résultat attendu :
+Expected result:
 
 ```text
 root
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Installation de Docker Engine
+# <span style="color:white">Installing Docker Engine</span>
 
-Ajouter la clé GPG Docker :
+Add the Docker GPG key:
 
 ```bash
 sudo install -m 0755 -d /etc/apt/keyrings
@@ -79,7 +98,7 @@ curl -fsSL https://download.docker.com/linux/debian/gpg \
 sudo chmod a+r /etc/apt/keyrings/docker.gpg
 ```
 
-Ajouter le dépôt Docker officiel :
+Add the official Docker repository:
 
 ```bash
 echo \
@@ -89,7 +108,7 @@ $(. /etc/os-release && echo $VERSION_CODENAME) stable" \
 | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
 ```
 
-Installer Docker et les plugins :
+Install Docker and its plugins:
 
 ```bash
 sudo apt update
@@ -102,65 +121,73 @@ sudo apt install -y \
     docker-compose-plugin
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Ajouter l'utilisateur au groupe Docker
+# <span style="color:white">Adding the user to the Docker group</span>
 
-Créer le groupe si nécessaire :
+Create the group if necessary:
 
 ```bash
 sudo groupadd docker
 ```
 
-Ajouter l'utilisateur :
+Add the user:
 
 ```bash
 sudo usermod -aG docker $USER
 ```
 
-Recharger les groupes :
+Reload the groups:
 
 ```bash
 newgrp docker
 ```
 
-Tester :
+Test:
 
 ```bash
 docker ps
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Vérification Docker Compose
+# <span style="color:white">Docker Compose verification</span>
 
-Vérifier que Compose V2 est installé :
+Check that Compose V2 is installed:
 
 ```bash
 docker compose version
 ```
 
-Résultat attendu :
+Expected result:
 
 ```text
 Docker Compose version v2.x.x
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Test Docker
+# <span style="color:white">Docker test</span>
 
-Lancer un conteneur de test :
+Run a test container:
 
 ```bash
 docker run hello-world
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Installation de Trivy
+# <span style="color:white">Installing Trivy</span>
 
-Ajouter le dépôt Trivy :
+Add the Trivy repository:
 
 ```bash
 sudo apt install -y wget gnupg
@@ -169,7 +196,7 @@ wget -qO - https://aquasecurity.github.io/trivy-repo/deb/public.key \
 | sudo gpg --dearmor -o /usr/share/keyrings/trivy.gpg
 ```
 
-Ajouter la source :
+Add the source:
 
 ```bash
 echo "deb [signed-by=/usr/share/keyrings/trivy.gpg] \
@@ -178,7 +205,7 @@ $(lsb_release -sc) main" \
 | sudo tee /etc/apt/sources.list.d/trivy.list
 ```
 
-Installer Trivy :
+Install Trivy:
 
 ```bash
 sudo apt update
@@ -186,31 +213,35 @@ sudo apt update
 sudo apt install -y trivy
 ```
 
-Vérifier :
+Check:
 
 ```bash
 trivy --version
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Installation de Firefox (si absent)
+# <span style="color:white">Installing Firefox (if missing)</span>
 
-Vérifier :
+Check:
 
 ```bash
 firefox --version
 ```
 
-Si absent :
+If missing:
 
 ```bash
 sudo apt install -y firefox-esr
 ```
 
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
 ---
 
-# Vérification finale
+# <span style="color:white">Final verification</span>
 
 ```bash
 docker --version
@@ -219,4 +250,8 @@ trivy --version
 firefox --version
 ```
 
-L'environnement est prêt pour construire et tester le projet Docker.
+The environment is ready to build and test the Docker project.
+
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+
+---
