@@ -2,6 +2,9 @@
 
 cd /var/www/html
 
+MYSQL_PASSWORD=$(cat /run/secrets/db_password)
+WP_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
+
 if [ ! -f "wp-config.php" ]; then
 
     curl -O https://wordpress.org/latest.tar.gz

@@ -18,6 +18,9 @@ RUN chmod +x /setup.sh
 
 EXPOSE 3306
 
+HEALTHCHECK --interval=5s --timeout=3s --retries=10 --start-period=30s \
+    CMD mariadb-admin ping -h 127.0.0.1 -uroot -p"$(cat /run/secrets/db_root_password)" --silent || exit 1
+
 USER appuser
 
 ENTRYPOINT ["/setup.sh"]

@@ -22,6 +22,7 @@ services:
       context: ./requirements/nginx
       args:
         ALPINE_IMAGE: ${ALPINE_IMAGE}
+        DOMAIN_NAME: ${DOMAIN_NAME}
     ports:
     - "443:443"
     restart: on-failure
@@ -30,13 +31,17 @@ services:
     networks:
       - inception
     depends_on:
-      - mariadb
+      mariadb:
+        condition: service_healthy
     build:
       context: ./requirements/wordpress
       args:
         ALPINE_IMAGE: ${ALPINE_IMAGE}
     env_file:
       - .env
+    secrets:
+      - db_password
+      - wp_admin_password
     volumes:
       - wordpress_data:/var/www/html
 
@@ -49,9 +54,20 @@ services:
         ALPINE_IMAGE: ${ALPINE_IMAGE}
     env_file:
       - .env
+    secrets:
+      - db_password
+      - db_root_password
     volumes:
       - mariadb_data:/var/lib/mysql
 
 volumes:
   mariadb_data:
   wordpress_data:
+
+secrets:
+  db_password:
+    file: ../secrets/db_password.txt
+  db_root_password:
+    file: ../secrets/db_root_password.txt
+  wp_admin_password:
+    file: ../secrets/credentials.txt

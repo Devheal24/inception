@@ -1,10 +1,13 @@
 #!/bin/sh
 
+MYSQL_PASSWORD=$(cat /run/secrets/db_password)
+MYSQL_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
+
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 
     mariadb-install-db --auth-root-authentication-method=normal --datadir=/var/lib/mysql
 
-    mariadbd --datadir=/var/lib/mysql &
+    mariadbd --datadir=/var/lib/mysql --skip-networking &
 
     sleep 5
 
