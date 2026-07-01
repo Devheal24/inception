@@ -17,6 +17,10 @@ services:
       context: ./requirements/wordpress
       args:
         ALPINE_IMAGE: ${ALPINE_IMAGE}
+    env_file:
+      - .env
+    volumes:
+      - wordpress_data:/var/www/html
 
   mariadb:
     build:
@@ -30,3 +34,4 @@ services:
 
 volumes:
   mariadb_data:
+  wordpress_data:
