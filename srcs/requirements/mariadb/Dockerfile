@@ -2,10 +2,11 @@ ARG ALPINE_IMAGE
 
 FROM ${ALPINE_IMAGE}
 
-RUN apk add --no-cache mariadb mariadb-client
+RUN apk add --no-cache mariadb mariadb-client && \
+    addgroup -S appuser && adduser -S appuser -G appuser
 
-RUN mkdir -p /run/mysqld && \
-    chown -R mysql:mysql /run/mysqld
+RUN mkdir -p /run/mysqld && chown -R appuser:appuser /run/mysqld && \
+    mkdir -p /var/lib/mysql && chown -R appuser:appuser /var/lib/mysql
 
 RUN sed -i '/skip-networking/d' /etc/my.cnf.d/*.cnf && \
     printf "[mysqld]\nport=3306\nbind-address=0.0.0.0\nskip-networking=0\n" \
@@ -16,5 +17,7 @@ COPY ./tools/setup.sh /setup.sh
 RUN chmod +x /setup.sh
 
 EXPOSE 3306
+
+USER appuser
 
 ENTRYPOINT ["/setup.sh"]

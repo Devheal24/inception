@@ -21,9 +21,15 @@ RUN apk add --no-cache \
 
 RUN ln -s /usr/bin/php83 /usr/bin/php
 
-RUN mkdir -p /var/www/html
+RUN addgroup -S appuser && adduser -S appuser -G appuser
 
-RUN sed -i 's/listen = 127.0.0.1:9000/listen = 9000/' /etc/php83/php-fpm.d/www.conf
+RUN mkdir -p /var/www/html && chown -R appuser:appuser /var/www/html /var/log/php83
+
+RUN sed -i \
+    -e 's/listen = 127.0.0.1:9000/listen = 9000/' \
+    -e 's/^user = .*/user = appuser/' \
+    -e 's/^group = .*/group = appuser/' \
+    /etc/php83/php-fpm.d/www.conf
 
 RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar && \
     chmod +x wp-cli.phar && \
@@ -36,5 +42,7 @@ COPY ./tools/setup.sh /setup.sh
 RUN chmod +x /setup.sh
 
 EXPOSE 9000
+
+USER appuser
 
 ENTRYPOINT ["/setup.sh"]

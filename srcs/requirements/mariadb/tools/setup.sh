@@ -2,13 +2,13 @@
 
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 
-    mariadb-install-db --user=mysql --datadir=/var/lib/mysql
+    mariadb-install-db --auth-root-authentication-method=normal --datadir=/var/lib/mysql
 
-    mariadbd --user=mysql --datadir=/var/lib/mysql &
+    mariadbd --datadir=/var/lib/mysql &
 
     sleep 5
 
-    mariadb << EOF
+    mariadb -uroot << EOF
 
 CREATE DATABASE IF NOT EXISTS ${MYSQL_DATABASE};
 
@@ -27,4 +27,4 @@ EOF
 
 fi
 
-exec mariadbd --user=mysql --console
+exec mariadbd --console

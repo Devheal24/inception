@@ -1,5 +1,21 @@
+networks:
+  inception:
+    driver: bridge
+    
 services:
   nginx:
+    networks:
+      - inception
+    cap_add:
+      - NET_BIND_SERVICE
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
     depends_on:
       - wordpress
     build:
@@ -11,6 +27,8 @@ services:
     restart: on-failure
 
   wordpress:
+    networks:
+      - inception
     depends_on:
       - mariadb
     build:
@@ -23,6 +41,8 @@ services:
       - wordpress_data:/var/www/html
 
   mariadb:
+    networks:
+      - inception
     build:
       context: ./requirements/mariadb
       args:
