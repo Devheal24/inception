@@ -1,5 +1,7 @@
 services:
   nginx:
+    depends_on:
+      - wordpress
     build:
       context: ./requirements/nginx
       args:
@@ -9,6 +11,8 @@ services:
     restart: on-failure
 
   wordpress:
+    depends_on:
+      - mariadb
     build:
       context: ./requirements/wordpress
       args:
@@ -19,3 +23,10 @@ services:
       context: ./requirements/mariadb
       args:
         ALPINE_IMAGE: ${ALPINE_IMAGE}
+    env_file:
+      - .env
+    volumes:
+      - mariadb_data:/var/lib/mysql
+
+volumes:
+  mariadb_data:

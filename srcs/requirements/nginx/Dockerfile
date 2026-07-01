@@ -12,7 +12,7 @@ RUN apk add --no-cache nginx openssl && \
     -out /etc/nginx/ssl/server.crt \
     -subj "/CN=localhost"
 
-COPY nginx.conf /etc/nginx/http.d/nginx.conf
+COPY ./conf/nginx.conf /etc/nginx/http.d/nginx.conf
 
 EXPOSE 443
 
