@@ -106,7 +106,7 @@ Un reverse proxy haute performance pour transmettre les requêtes à des applica
 Un load balancer pour répartir le trafic entre plusieurs serveurs.  
 Un cache pour accélérer les réponses.  
 **- TLS** est un protocole de chiffrement de données.  
-v1.2 et v1.3 sont ses dernières versions stables et sécurisées.  
+v1.2 et v1.3 sont ses dernières versions stables et sécurisées ; ce projet n'active que TLSv1.3 dans `nginx.conf` (`ssl_protocols TLSv1.3;`), ce qui satisfait le sujet ("TLSv1.2 ou TLSv1.3 uniquement").  
 Il s'occupe de masquer les données provenant de tiers via une suite de chiffrement décidée lors du premier contact (négociation).  
 Il garantit l'authentification des parties qui échangent et il s'assure de l'intégrité des données transmises.
 
@@ -139,7 +139,7 @@ Bonnes pratiques: ne jamais les mettre en dur dans un Dockerfile/`ENV`/`ARG` (r�
 - **pourquoi le port 443**  
 C'est le port standard (IANA) pour HTTPS, c'est-à-dire HTTP encapsulé dans TLS/SSL.  
 Un navigateur qui tape une URL en `https://` sans préciser de port s'y connecte automatiquement par défaut, ce qui évite d'avoir à spécifier un port custom dans l'URL.  
-C'est pourquoi il est exposé par NGINX dans ce projet (`443:443`), seul point d'entrée du stack, avec tout le trafic chiffré en TLS 1.2/1.3.
+C'est pourquoi il est exposé par NGINX dans ce projet (`443:443`), seul point d'entrée du stack, avec tout le trafic chiffré en TLS 1.3.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 

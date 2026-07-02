@@ -26,8 +26,8 @@ a lightweight Alpine base image.
 
 The stack is orchestrated with a single `docker-compose.yml` and made up of
 three containers:
-- **NGINX**, the only entry point, serving everything over TLS (v1.2/v1.3
-  only) with a self-signed certificate for `mgarnier.42.fr`.
+- **NGINX**, the only entry point, serving everything over TLS (v1.3 only)
+  with a self-signed certificate for `mgarnier.42.fr`.
 - **WordPress** with **php-fpm** (no web server bundled in this container),
   bootstrapped and configured on first boot with WP-CLI.
 - **MariaDB**, holding the WordPress database, with no web server either.
@@ -161,7 +161,7 @@ Cgroups are tools that limit and account for resource usage.
 
 ### Secrets vs Environment Variables :
 Environment variables are visible to anyone who can inspect the container: `docker inspect`, `docker exec ... env`, or the process's own `/proc/<pid>/environ` all expose them in plain text, and they can end up logged or leaked to child processes.  
-Docker secrets are mounted as files (by default under `/run/secrets/<secret_name>`) only inside the containers that request them, are never stored in the image or in `docker inspect` output, and stay encrypted at rest and in transit between manager nodes.  
+Docker secrets are mounted as files (by default under `/run/secrets/<secret_name>`) only inside the containers that request them, and are never stored in the image, in `docker inspect` output, or in `docker exec ... env`. Note: this project runs plain `docker compose` (no Swarm), so the secret files are mounted read-only as-is rather than encrypted at rest/in transit — that extra guarantee only applies to true Swarm-mode secrets (encrypted Raft store, replicated across manager nodes).  
 That is why credentials such as database and WordPress admin passwords are passed to the containers as secrets rather than as environment variables in this project.
 
 ### Docker Network vs Host Network :

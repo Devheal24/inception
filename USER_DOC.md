@@ -16,7 +16,7 @@
 The stack is made of three containers, each with a single responsibility:
 
 - **NGINX** is the only entry point to the stack. It is a web server / reverse
-  proxy that serves everything over TLS (v1.2/v1.3 only) on port 443, using a
+  proxy that serves everything over TLS (v1.3 only) on port 443, using a
   self-signed certificate for `mgarnier.42.fr`. It serves static files
   directly and forwards `.php` requests to WordPress.
 - **WordPress + php-fpm**: WordPress is the CMS/blogging software that
