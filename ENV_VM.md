@@ -81,6 +81,12 @@ Expected result:
 root
 ```
 
+If not:
+
+```bash
+reboot
+```
+
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
 ---
