@@ -1,7 +1,7 @@
 networks:
   inception:
     driver: bridge
-    
+
 services:
   nginx:
     networks:
@@ -17,14 +17,15 @@ services:
           cpus: '0.25'
           memory: 128M
     depends_on:
-      - wordpress
+      wordpress:
+        condition: service_healthy
     build:
       context: ./requirements/nginx
       args:
         ALPINE_IMAGE: ${ALPINE_IMAGE}
         DOMAIN_NAME: ${DOMAIN_NAME}
     ports:
-    - "443:443"
+      - "443:443"
     restart: on-failure
 
   wordpress:

@@ -43,6 +43,9 @@ RUN chmod +x /setup.sh
 
 EXPOSE 9000
 
+HEALTHCHECK --interval=5s --timeout=3s --retries=10 --start-period=15s \
+    CMD nc -z 127.0.0.1 9000 || exit 1
+
 USER appuser
 
 ENTRYPOINT ["/setup.sh"]
