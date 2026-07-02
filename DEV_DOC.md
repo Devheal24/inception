@@ -46,6 +46,12 @@ repository:
 | `secrets/wp_admin_password.txt` | WordPress admin (`WP_ADMIN`) password |
 | `secrets/wp_user_password.txt` | WordPress second, non-admin user (`WP_USER`) password |
 
+Create the folder and the (empty) files with:
+```sh
+mkdir -p secrets && touch secrets/db_password.txt secrets/db_root_password.txt secrets/wp_admin_password.txt secrets/wp_user_password.txt
+```
+Then fill each file with its password (one line, no trailing newline needed).
+
 They are referenced in `srcs/docker-compose.yml`'s top-level `secrets:`
 block and mounted read-only inside the containers at `/run/secrets/<name>`,
 where the setup scripts (`mariadb/tools/setup.sh`,
