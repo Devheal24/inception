@@ -110,9 +110,16 @@ v1.2 et v1.3 sont ses dernières versions stables et sécurisées.
 Il s'occupe de masquer les données provenant de tiers via une suite de chiffrement décidée lors du premier contact (négociation).  
 Il garantit l'authentification des parties qui échangent et il s'assure de l'intégrité des données transmises.
 
-- **php-fpm**
+- **php-fpm**  
+FastCGI Process Manager, une implémentation alternative de PHP FastCGI qui gère un pool de processus PHP pour traiter les requêtes.  
+Contrairement à `mod_php`, il tourne indépendamment du serveur web et communique via le protocole FastCGI.  
+NGINX ne sait pas exécuter de PHP : il reçoit les requêtes HTTP et transmet celles en `.php` à php-fpm (ici sur le port 9000, en interne), qui exécute le code et renvoie le résultat.  
+Avantage: séparation claire des responsabilités (un conteneur = un rôle), et possibilité de scaler indépendamment le serveur web et le moteur PHP.
 
-- **MariaDB**
+- **MariaDB**  
+Système de gestion de base de données relationnelle (SGBDR), un fork de MySQL créé après le rachat de MySQL par Oracle, pour garantir une licence 100% open source.  
+Compatible avec le protocole et la syntaxe SQL de MySQL (mêmes commandes, mêmes clients).  
+Dans ce projet, il stocke toutes les données de WordPress (articles, utilisateurs, réglages) et n'est accessible que depuis le réseau Docker interne, jamais exposé à l'extérieur.
 
 - **latest tag**:  
 Lors du choix de l'image de base, ce tag est celui par défaut qui va prendre la dernière version de l'image choisie.  
@@ -120,10 +127,19 @@ Le principal soucis de ce tag est qu'il peut changer en fonction des mises à jo
 Il est préférable de définir son tag précisemment avec la version voulue pour stabilisé le résultat.
 
 - **docker secrets**  
+Mécanisme Docker pour transmettre des données sensibles (mots de passe, clés) à un conteneur sans les exposer dans l'image, les variables d'environnement ou `docker inspect`.  
+Déclarés dans `docker-compose.yml` (`secrets:`), montés en lecture seule dans le conteneur à `/run/secrets/<name>` au démarrage (runtime).  
+À ne pas confondre avec `RUN --mount=type=secret` (BuildKit): celui-ci sert à passer un secret le temps d'une seule instruction `RUN` pendant le **build** de l'image (ex: token pour télécharger une dépendance privée), sans qu'il finisse dans une couche de l'image.  
+Dans ce projet, tous les mots de passe ne servent qu'au runtime (dans les scripts `setup.sh`), donc les Compose secrets suffisent — pas besoin de secrets de build.
 
 - **credentials, API keys**  
+Toute donnée secrète permettant de s'authentifier (mot de passe, clé API, token) doit rester hors du code versionné et hors des couches d'image Docker.  
+Bonnes pratiques: ne jamais les mettre en dur dans un Dockerfile/`ENV`/`ARG` (récupérable via `docker history` même après un `rm`), les charger via des fichiers ignorés par git (`secrets/`, `.env`), et utiliser des mécanismes dédiés au runtime (Docker secrets, gestionnaires externes type Vault) plutôt que des variables d'environnement en clair.
 
 - **pourquoi le port 443**  
+C'est le port standard (IANA) pour HTTPS, c'est-à-dire HTTP encapsulé dans TLS/SSL.  
+Un navigateur qui tape une URL en `https://` sans préciser de port s'y connecte automatiquement par défaut, ce qui évite d'avoir à spécifier un port custom dans l'URL.  
+C'est pourquoi il est exposé par NGINX dans ce projet (`443:443`), seul point d'entrée du stack, avec tout le trafic chiffré en TLS 1.2/1.3.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
