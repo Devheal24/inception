@@ -99,9 +99,14 @@ Before the first `make`, the environment must be set up (`.env` file and
 
 [NGINX](https://hub.docker.com/_/nginx?tag=stable-alpine3.23-perl)
 
-[HADOLINT](https://github.com/hadolint/hadolint)
+[HADOLINT](https://github.com/hadolint/hadolint)  
+lints Dockerfiles for bad
+practices (e.g. unpinned packages, redundant `RUN` layers):  
+`docker run --rm -i hadolint/hadolint < path/to/Dockerfile`.
 
-[TRIVY](https://trivy.dev/docs/latest/getting-started/installation/)
+[TRIVY](https://trivy.dev/docs/latest/getting-started/installation/)  
+scans built images for known OS/package vulnerabilities:  
+`trivy image --severity HIGH,CRITICAL <image>`.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
