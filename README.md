@@ -17,11 +17,12 @@
 
 # <span style="color:white">Description</span>
 
-Inception is a 42 school project whose goal is to build a small
-infrastructure entirely with Docker.  
-Every service runs in its own
-container, built from a custom Dockerfile on a lightweight Alpine base
-image — no pre-built service images, no `latest` tag.
+Inception is a 42 school project whose goal is to learn Docker in depth —
+containers, networking, volumes, secrets — by designing, building and
+securing a small multi-service infrastructure entirely by hand, with no
+pre-built service images and no `latest` tag.  
+Every service runs in its own container, built from a custom Dockerfile on
+a lightweight Alpine base image.
 
 The stack is orchestrated with a single `docker-compose.yml` and made up of
 three containers:
@@ -118,6 +119,17 @@ href="#top">return Title</a></p>
 ---
 
 # <span style="color:white">Project description</span>
+
+Docker is a containerization platform: it packages an application with its
+dependencies into lightweight, isolated containers that share the host's
+kernel instead of needing a full guest OS.
+
+Besides this README, the project also has:  
+[`DEV_DOC.md`](DEV_DOC.md) (environment setup and day-to-day
+commands),  
+[`ENV_DOC.md`](ENV_DOC.md) (tooling installation),  
+[`USER_DOC.md`](USER_DOC.md) (using the running stack),  
+[`TODO.md`](TODO.md) (learning notes and glossary).
 
 ### Virtual Machines vs Docker :
 A virtual machine has its own OS, whereas containers share the host's kernel, which makes them much lighter.  
