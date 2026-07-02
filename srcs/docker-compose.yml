@@ -22,7 +22,7 @@ services:
     build:
       context: ./requirements/nginx
       args:
-        ALPINE_IMAGE: ${ALPINE_IMAGE}
+        ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
         DOMAIN_NAME: ${DOMAIN_NAME}
     ports:
       - "443:443"
@@ -45,7 +45,7 @@ services:
     build:
       context: ./requirements/wordpress
       args:
-        ALPINE_IMAGE: ${ALPINE_IMAGE}
+        ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
     env_file:
       - .env
     secrets:
@@ -70,7 +70,7 @@ services:
     build:
       context: ./requirements/mariadb
       args:
-        ALPINE_IMAGE: ${ALPINE_IMAGE}
+        ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
     env_file:
       - .env
     secrets:

@@ -28,15 +28,19 @@ developer). Copy the tracked template and fill it in:
 cp srcs/.env.example srcs/.env
 ```
 
-It defines things like the base Alpine image, `MYSQL_DATABASE`/`MYSQL_USER`,
-`DOMAIN_NAME`, `WP_TITLE`, `WP_ADMIN`/`WP_ADMIN_EMAIL`,
-`WP_USER`/`WP_USER_EMAIL`. It intentionally does **not** hold any password.
+It defines things like `MYSQL_DATABASE`/`MYSQL_USER`, `DOMAIN_NAME`,
+`WP_TITLE`, `WP_ADMIN`/`WP_ADMIN_EMAIL`, `WP_USER`/`WP_USER_EMAIL`. It
+intentionally does **not** hold any password.
 
-`ALPINE_IMAGE` is the only value in there that must **not** be edited: it is
-pinned to a specific, tested Alpine digest on purpose. Every Dockerfile in
-this project uses `apk` and other Alpine-specific tooling, so pointing it at
-a different distro (e.g. Debian) or even a different Alpine tag/digest would
-break the build.
+The base Alpine image is **not** in `.env`: it is hardcoded, pinned to a
+specific tested digest, directly in `srcs/docker-compose.yml`'s three
+`build.args`. This is deliberate — `.env` is git-ignored (one per
+developer), so it cannot guarantee every developer or the grader builds
+from the exact same, tested base image; putting it in the tracked compose
+file instead does. Every Dockerfile in this project uses `apk` and other
+Alpine-specific tooling, so pointing it at a different distro (e.g. Debian)
+or even a different Alpine tag/digest would break the build — don't edit
+those three lines in `docker-compose.yml`.
 
 ### Secrets
 
