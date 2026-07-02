@@ -97,7 +97,14 @@ inception/
 
 # <span style="color:white">AI</span>
 
-<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
+ChatGPT helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
+
+Claude helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.
+
+<p align="right" style="font-size: 10px;"><a
+href="#top">return Title</a></p>
+
+---
 
 # <span style="color:white">Project description</span>
 
