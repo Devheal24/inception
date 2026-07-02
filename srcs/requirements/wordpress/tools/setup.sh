@@ -6,6 +6,11 @@ MYSQL_PASSWORD=$(cat /run/secrets/db_password)
 WP_ADMIN_PASSWORD=$(cat /run/secrets/wp_admin_password)
 WP_USER_PASSWORD=$(cat /run/secrets/wp_user_password)
 
+if [ -z "$MYSQL_PASSWORD" ] || [ -z "$WP_ADMIN_PASSWORD" ] || [ -z "$WP_USER_PASSWORD" ]; then
+    echo "setup.sh: db_password, wp_admin_password and wp_user_password secrets must not be empty" >&2
+    exit 1
+fi
+
 if [ ! -f "wp-config.php" ]; then
 
     curl -O https://wordpress.org/latest.tar.gz

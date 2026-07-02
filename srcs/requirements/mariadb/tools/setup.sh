@@ -3,6 +3,11 @@
 MYSQL_PASSWORD=$(cat /run/secrets/db_password)
 MYSQL_ROOT_PASSWORD=$(cat /run/secrets/db_root_password)
 
+if [ -z "$MYSQL_PASSWORD" ] || [ -z "$MYSQL_ROOT_PASSWORD" ]; then
+    echo "setup.sh: db_password and db_root_password secrets must not be empty" >&2
+    exit 1
+fi
+
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 
     mariadb-install-db --auth-root-authentication-method=normal --datadir=/var/lib/mysql
@@ -26,7 +31,7 @@ FLUSH PRIVILEGES;
 
 EOF
 
-    mariadb-admin -uroot -p${MYSQL_ROOT_PASSWORD} shutdown
+    mariadb-admin -uroot -p"${MYSQL_ROOT_PASSWORD}" shutdown
 
 fi
 
