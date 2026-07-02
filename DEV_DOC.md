@@ -14,9 +14,10 @@
 
 ### Prerequisites
 
-This project is meant to be built and run inside a Debian VM with Docker
-Engine, the Docker Compose v2 plugin, and (optionally) Trivy for image
-scanning. See [`ENV_VM.md`](ENV_VM.md) for the full step-by-step VM setup.
+This project is meant to be built and run on a Debian machine (virtual or
+physical, local or remote) with Docker Engine, the Docker Compose v2 plugin,
+and (optionally) Trivy for image scanning.  
+See [`ENV_DOC.md`](ENV_DOC.md) for the full step-by-step environment setup.
 
 ### Configuration files
 
