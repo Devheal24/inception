@@ -10,7 +10,6 @@
 - [Architecture](#architecture)
 - [Instructions](#instructions)
 - [Resources](#resources)
-- [AI](#ai)
 - [Project description](#project-description)
 
 ---
@@ -107,19 +106,13 @@ lints Dockerfiles for bad practices:
 scans built images for known OS/package vulnerabilities:  
 `trivy image --severity HIGH,CRITICAL <image>`.
 
-<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
-
----
-
-# <span style="color:white">AI</span>
-
+**How AI was used:**  
 **ChatGPT** helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
 
 **Claude** helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.  
 He also helped me to regularly test my program and point out errors.
 
-<p align="right" style="font-size: 10px;"><a
-href="#top">return Title</a></p>
+<p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
 ---
 
