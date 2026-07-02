@@ -56,6 +56,16 @@ inception/
 
 # <span style="color:white">Instructions</span>
 
+Clone the repository, then move into it:
+
+```bash
+git clone git@github.com:Devheal24/inception.git
+cd inception
+```
+
+Before the first `make`, the environment must be set up (`.env` file and
+`secrets/` folder) — see [`DEV_DOC.md`](DEV_DOC.md#set-up-the-environment-from-scratch-prerequisites-configuration-files-secrets).
+
 `make` builds and starts the whole stack (equivalent to `make all`).
 
 | Command | What it does |
