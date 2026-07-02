@@ -18,6 +18,13 @@ if [ -z "$MYSQL_DATABASE" ] || [ -z "$MYSQL_USER" ] || [ -z "$DOMAIN_NAME" ] || 
     exit 1
 fi
 
+case "$WP_ADMIN" in
+    *[Aa][Dd][Mm][Ii][Nn]*)
+        echo "setup.sh: WP_ADMIN must not contain \"admin\" (check .env)" >&2
+        exit 1
+        ;;
+esac
+
 if [ ! -f "wp-config.php" ]; then
 
     curl -O https://wordpress.org/latest.tar.gz
