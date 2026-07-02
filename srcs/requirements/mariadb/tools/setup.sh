@@ -8,6 +8,11 @@ if [ -z "$MYSQL_PASSWORD" ] || [ -z "$MYSQL_ROOT_PASSWORD" ]; then
     exit 1
 fi
 
+if [ -z "$MYSQL_DATABASE" ] || [ -z "$MYSQL_USER" ]; then
+    echo "setup.sh: MYSQL_DATABASE and MYSQL_USER must be set (check .env)" >&2
+    exit 1
+fi
+
 if [ ! -d "/var/lib/mysql/mysql" ]; then
 
     mariadb-install-db --auth-root-authentication-method=normal --datadir=/var/lib/mysql

@@ -11,6 +11,13 @@ if [ -z "$MYSQL_PASSWORD" ] || [ -z "$WP_ADMIN_PASSWORD" ] || [ -z "$WP_USER_PAS
     exit 1
 fi
 
+if [ -z "$MYSQL_DATABASE" ] || [ -z "$MYSQL_USER" ] || [ -z "$DOMAIN_NAME" ] || \
+   [ -z "$WP_TITLE" ] || [ -z "$WP_ADMIN" ] || [ -z "$WP_ADMIN_EMAIL" ] || \
+   [ -z "$WP_USER" ] || [ -z "$WP_USER_EMAIL" ]; then
+    echo "setup.sh: MYSQL_DATABASE, MYSQL_USER, DOMAIN_NAME, WP_TITLE, WP_ADMIN, WP_ADMIN_EMAIL, WP_USER and WP_USER_EMAIL must all be set (check .env)" >&2
+    exit 1
+fi
+
 if [ ! -f "wp-config.php" ]; then
 
     curl -O https://wordpress.org/latest.tar.gz
