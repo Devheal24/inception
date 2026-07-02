@@ -95,13 +95,12 @@ Before the first `make`, the environment must be set up (`.env` file and
 
 [TRAINING DOCKER](https://github.com/stephrobert/containers-training/blob/main/README.md)
 
-[ALPINE](https://alpinelinux.org/releases/)
+[ALPINE IMAGE](https://alpinelinux.org/releases/)
 
-[NGINX](https://hub.docker.com/_/nginx?tag=stable-alpine3.23-perl)
+[NGINX TUTORIAL](https://blog.stephane-robert.info/docs/services/web/nginx/)
 
 [HADOLINT](https://github.com/hadolint/hadolint)  
-lints Dockerfiles for bad
-practices (e.g. unpinned packages, redundant `RUN` layers):  
+lints Dockerfiles for bad practices:  
 `docker run --rm -i hadolint/hadolint < path/to/Dockerfile`.
 
 [TRIVY](https://trivy.dev/docs/latest/getting-started/installation/)  
@@ -114,9 +113,10 @@ scans built images for known OS/package vulnerabilities:
 
 # <span style="color:white">AI</span>
 
-ChatGPT helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
+**ChatGPT** helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
 
-Claude helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.
+**Claude** helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.  
+He also helped me to regularly test my program and point out errors.
 
 <p align="right" style="font-size: 10px;"><a
 href="#top">return Title</a></p>
