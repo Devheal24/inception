@@ -18,7 +18,8 @@
 # <span style="color:white">Description</span>
 
 Inception is a 42 school project whose goal is to build a small
-infrastructure entirely with Docker. Every service runs in its own
+infrastructure entirely with Docker.  
+Every service runs in its own
 container, built from a custom Dockerfile on a lightweight Alpine base
 image — no pre-built service images, no `latest` tag.
 
