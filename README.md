@@ -44,12 +44,23 @@ Docker secrets rather than plain environment variables.
 
 ```text
 inception/
-|
 ├── Makefile
 ├── README.md
-├── srcs
-│   └── docker-compose.yml
-└── TODO.md
+├── DEV_DOC.md
+├── USER_DOC.md
+├── ENV_DOC.md
+├── secrets
+│   ├── db_password.txt
+│   ├── db_root_password.txt
+│   ├── wp_admin_password.txt
+│   └── wp_user_password.txt
+└── srcs
+    ├── docker-compose.yml
+    ├── .env
+    └── requirements
+        ├── nginx
+        ├── wordpress
+        └── mariadb
 ```
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -126,8 +137,7 @@ Besides this README, the project also has:
 [`DEV_DOC.md`](DEV_DOC.md) (environment setup and day-to-day
 commands),  
 [`ENV_DOC.md`](ENV_DOC.md) (tooling installation),  
-[`USER_DOC.md`](USER_DOC.md) (using the running stack),  
-[`TODO.md`](TODO.md) (learning notes and glossary).
+[`USER_DOC.md`](USER_DOC.md) (using the running stack).
 
 ### Virtual Machines vs Docker :
 A virtual machine has its own OS, whereas containers share the host's kernel, which makes them much lighter.  

@@ -21,25 +21,27 @@ See [`ENV_DOC.md`](ENV_DOC.md) for the full step-by-step environment setup.
 
 ### Configuration files
 
-Non-secret configuration lives in `srcs/.env` (git-ignored, one per
-developer). Copy the tracked template and fill it in:
-
-```bash
-cp srcs/.env.example srcs/.env
-```
+Non-secret configuration lives in `srcs/.env`, tracked by git (it holds no
+password, so there is nothing sensitive to keep out of the repository).
+It already has real, working default values — nothing to copy or
+generate before the first `make up`.
 
 It defines things like `MYSQL_DATABASE`/`MYSQL_USER`, `DOMAIN_NAME`,
 `WP_TITLE`, `WP_ADMIN`/`WP_ADMIN_EMAIL`, `WP_USER`/`WP_USER_EMAIL`. It
-intentionally does **not** hold any password.
+intentionally does **not** hold any password — each password-shaped line
+is commented out, pointing to the `secrets/*.txt` file that actually
+provides that value (see [Secrets](#secrets) below).
 
 The base Alpine image is **not** in `.env`: it is hardcoded, pinned to a
 specific tested digest, directly in `srcs/docker-compose.yml`'s three
-`build.args`. This is deliberate — `.env` is git-ignored (one per
-developer), so it cannot guarantee every developer or the grader builds
-from the exact same, tested base image; putting it in the tracked compose
-file instead does. Every Dockerfile in this project uses `apk` and other
-Alpine-specific tooling, so pointing it at a different distro (e.g. Debian)
-or even a different Alpine tag/digest would break the build — don't edit
+`build.args`. This is deliberate — even though `.env` is tracked here, its
+purpose is per-deployment config (domain name, WordPress titles/usernames),
+not a fixed build constant; putting the Alpine digest in the tracked
+compose file guarantees every developer and the grader build from the
+exact same, tested base image regardless of `.env`. Every Dockerfile in
+this project uses `apk` and other Alpine-specific tooling, so pointing it
+at a different distro (e.g. Debian) or even a different Alpine tag/digest
+would break the build — don't edit
 those three lines in `docker-compose.yml`.
 
 ### Secrets
