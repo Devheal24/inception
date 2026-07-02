@@ -137,6 +137,9 @@ Cgroups are tools that limit and account for resource usage.
 </details>
 
 ### Secrets vs Environment Variables :
+Environment variables are visible to anyone who can inspect the container: `docker inspect`, `docker exec ... env`, or the process's own `/proc/<pid>/environ` all expose them in plain text, and they can end up logged or leaked to child processes.  
+Docker secrets are mounted as files (by default under `/run/secrets/<secret_name>`) only inside the containers that request them, are never stored in the image or in `docker inspect` output, and stay encrypted at rest and in transit between manager nodes.  
+That is why credentials such as database and WordPress admin passwords are passed to the containers as secrets rather than as environment variables in this project.
 
 ### Docker Network vs Host Network :
 Docker Network allows multiple containers to connect to each other and to the outside world.  
