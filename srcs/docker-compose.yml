@@ -2,6 +2,7 @@ networks:
   inception:
     driver: bridge
 
+
 services:
   nginx:
     image: nginx
@@ -85,6 +86,30 @@ services:
       - mariadb_data:/var/lib/mysql
     restart: on-failure
 
+  adminer:
+    image: adminer
+    networks:
+      - inception
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    build:
+      context: ./requirements/bonus/adminer
+      args:
+        ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
+    env_file:
+      - .env
+    restart: on-failure
+
+
 volumes:
   mariadb_data:
     driver: local
@@ -98,6 +123,7 @@ volumes:
       type: none
       o: bind
       device: /home/mgarnier/data/wordpress
+
 
 secrets:
   db_password:
