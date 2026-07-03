@@ -101,27 +101,38 @@ Before the first `make`, the environment must be set up (`.env` file and
 
 # <span style="color:white">Resources</span>
 
-[DOCKER TUTORIAL](https://blog.stephane-robert.info/docs/conteneurisation/)
+### LEARNING
 
-[TRAINING DOCKER](https://github.com/stephrobert/containers-training/blob/main/README.md)
+- [DOCKER TUTORIAL](https://blog.stephane-robert.info/docs/conteneurisation/)
 
-[ALPINE IMAGE](https://alpinelinux.org/releases/)
+- [TRAINING DOCKER](https://github.com/stephrobert/containers-training/blob/main/README.md)
 
-[NGINX TUTORIAL](https://blog.stephane-robert.info/docs/services/web/nginx/)
+- [ALPINE IMAGE](https://alpinelinux.org/releases/)
 
-[HADOLINT](https://github.com/hadolint/hadolint)  
+- [NGINX TUTORIAL](https://blog.stephane-robert.info/docs/services/web/nginx/)
+
+### SECURITY SCANNERS
+
+- [HADOLINT](https://github.com/hadolint/hadolint)  
 lints Dockerfiles for bad practices:  
 `docker run --rm -i hadolint/hadolint < path/to/Dockerfile`.
 
-[TRIVY](https://trivy.dev/docs/latest/getting-started/installation/)  
+- [TRIVY](https://trivy.dev/docs/latest/getting-started/installation/)  
 scans built images for known OS/package vulnerabilities:  
 `trivy image --severity HIGH,CRITICAL <image>`.
 
-**How AI was used:**  
-**ChatGPT** helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
+### BONUS in srcs/requirements/bonus
 
-**Claude** helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.  
-He also helped me to regularly test my program and point out errors.
+- [ADMINER](https://www.adminer.org/)  
+is a tool for managing content in databases.  
+It natively supports MySQL, MariaDB and many others.
+
+### **How AI was used**
+
+- **ChatGPT** helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
+
+- **Claude** helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.  
+It also helped me to regularly test my program, point out errors and write my commit.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
