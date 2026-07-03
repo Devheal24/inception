@@ -4,6 +4,7 @@ networks:
 
 
 services:
+# NGINX
   nginx:
     image: nginx
     networks:
@@ -32,6 +33,7 @@ services:
       - wordpress_data:/var/www/html:ro
     restart: on-failure
 
+# WORDPRESS
   wordpress:
     image: wordpress
     networks:
@@ -61,6 +63,7 @@ services:
       - wordpress_data:/var/www/html
     restart: on-failure
 
+# MARIADB
   mariadb:
     image: mariadb
     networks:
@@ -86,6 +89,7 @@ services:
       - mariadb_data:/var/lib/mysql
     restart: on-failure
 
+# ADMINER
   adminer:
     image: adminer
     networks:
@@ -109,7 +113,7 @@ services:
       - .env
     restart: on-failure
 
-
+# VOLUMES
 volumes:
   mariadb_data:
     driver: local
@@ -124,7 +128,7 @@ volumes:
       o: bind
       device: /home/mgarnier/data/wordpress
 
-
+# SECRETS
 secrets:
   db_password:
     file: ../secrets/db_password.txt
