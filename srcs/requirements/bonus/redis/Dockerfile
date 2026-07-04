@@ -9,4 +9,4 @@ HEALTHCHECK --interval=5s --timeout=3s --retries=10 --start-period=5s \
 
 USER redis
 
-CMD ["redis-server", "--protected-mode", "no"]
+CMD ["redis-server", "--protected-mode", "no", "--save", ""]
