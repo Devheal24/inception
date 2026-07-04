@@ -42,12 +42,17 @@ if [ ! -f "wp-config.php" ]; then
         --dbpass=${MYSQL_PASSWORD} \
         --dbhost=mariadb
 
+    wp config set WP_REDIS_HOST redis
+
     wp core install \
         --url=${DOMAIN_NAME} \
         --title=${WP_TITLE} \
         --admin_user=${WP_ADMIN} \
         --admin_password=${WP_ADMIN_PASSWORD} \
         --admin_email=${WP_ADMIN_EMAIL}
+
+    wp plugin install redis-cache --activate
+    wp redis enable
 
     wp user create \
         ${WP_USER} ${WP_USER_EMAIL} \

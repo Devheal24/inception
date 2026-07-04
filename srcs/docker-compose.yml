@@ -50,6 +50,8 @@ services:
     depends_on:
       mariadb:
         condition: service_healthy
+      redis:
+        condition: service_healthy
     build:
       context: ./requirements/wordpress
       args:
@@ -129,6 +131,25 @@ services:
           memory: 128M
     build:
       context: ./requirements/bonus/static_webpage
+      args:
+        ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
+    restart: on-failure
+
+# REDIS
+  redis:
+    image: redis
+    networks:
+      - inception
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    build:
+      context: ./requirements/bonus/redis
       args:
         ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
     restart: on-failure

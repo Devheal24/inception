@@ -16,6 +16,9 @@ RUN apk add --no-cache \
     php83-openssl \
     php83-phar \
     php83-iconv \
+    php83-tokenizer \
+    php83-ctype \
+    php83-pecl-redis \
     curl \
     mariadb-client
 
