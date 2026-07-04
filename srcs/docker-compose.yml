@@ -117,15 +117,20 @@ services:
 # STATIC WEBPAGE
   static_webpage:
     image: static_webpage
+    networks:
+      - inception
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
     build:
       context: ./requirements/bonus/static_webpage
       args:
         ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
-        DOMAIN_NAME: ${DOMAIN_NAME}
-    networks:
-      - inception
-    ports:
-      - "8443:443"
     restart: on-failure
 
 # VOLUMES
