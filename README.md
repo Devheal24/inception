@@ -24,17 +24,24 @@ Every service runs in its own container, built from a custom Dockerfile on
 a lightweight Alpine base image.
 
 The stack is orchestrated with a single `docker-compose.yml` and made up of
-three containers:
+three mandatory containers:
 - **NGINX**, the only entry point, serving everything over TLS (v1.3 only)
   with a self-signed certificate for `mgarnier.42.fr`.
 - **WordPress** with **php-fpm** (no web server bundled in this container),
   bootstrapped and configured on first boot with WP-CLI.
 - **MariaDB**, holding the WordPress database, with no web server either.
 
+plus three bonus containers, each reachable only over the internal Docker
+network (no extra port published on the host):
+- **Adminer**, a database admin UI proxied through the main NGINX at
+  `/adminer.php`.
+- **Redis**, used as WordPress's persistent object cache.
+- A **static webpage**, proxied through the main NGINX at `/mywebpage/`.
+
 Containers communicate over a dedicated Docker network, restart
-automatically on failure, and are subject to CPU/memory limits. Database
-and website data are kept in two named Docker volumes pinned to
-`/home/mgarnier/data` on the host, so they survive container recreation.
+automatically on failure, and are subject to CPU/memory limits.  
+Database and website data are kept in two named Docker volumes pinned to
+`/home/mgarnier/data` on the host, so they survive container recreation.  
 Credentials (database passwords, WordPress admin password) are handled with
 Docker secrets rather than plain environment variables.
 
@@ -49,18 +56,17 @@ inception/
 ├── DEV_DOC.md
 ├── USER_DOC.md
 ├── ENV_DOC.md
-├── secrets
-│   ├── db_password.txt
-│   ├── db_root_password.txt
-│   ├── wp_admin_password.txt
-│   └── wp_user_password.txt
 └── srcs
     ├── docker-compose.yml
     ├── .env
     └── requirements
         ├── nginx
         ├── wordpress
-        └── mariadb
+        ├── mariadb
+        └── bonus
+            ├── adminer
+            ├── redis
+            └── static_webpage
 ```
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -78,22 +84,20 @@ cd inception
 Before the first `make`, the environment must be set up (`.env` file and
 `secrets/` folder) — see [`DEV_DOC.md`](DEV_DOC.md#set-up-the-environment-from-scratch-prerequisites-configuration-files-secrets).
 
-`make` builds and starts the whole stack (equivalent to `make all`).
-
 | Command | What it does |
 |---|---|
-| `make` / `make all` | Build the images and start the containers |
-| `make build` | Build the images without starting the containers |
-| `make up` | Build (if needed) and start the containers in the background |
-| `make down` | Stop and remove the containers |
-| `make stop` | Stop the containers without removing them |
-| `make start` | Start previously stopped containers |
-| `make restart` | Restart the containers |
-| `make logs` | Follow the logs of all containers |
-| `make ps` | List the status of the project's containers |
-| `make clean` | Alias for `make down` |
+| `make all` / `make up` | Build the images and start the containers |
+| `make clean` / `make down` | Stop and remove the containers |
 | `make fclean` | Remove containers, named volumes and images |
 | `make re` | `make fclean` followed by `make all` |
+| `make build` | Build the images without starting the containers |
+| `make start` | Start previously stopped containers |
+| `make stop` | Stop the containers without removing them |
+| `make restart` | Restart the containers |
+| `make` / `make help` | Show the usage help |
+| `make logs` | Follow the logs of all containers |
+| `make ps` | List the status of the project's containers |
+| `make purge-data` | <span style="color:red">**DESTROY** the persisted MariaDB/WordPress data</span> |
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -126,6 +130,15 @@ scans built images for known OS/package vulnerabilities:
 - [ADMINER](https://www.adminer.org/)  
 is a tool for managing content in databases.  
 It natively supports MySQL, MariaDB and many others.
+
+- [REDIS](https://redis.io/)  
+is an in-memory key-value store, used here as WordPress's persistent
+object cache so repeated data (options, transients, translation
+files...) is served from memory instead of hitting MariaDB again on
+every page load.  
+Check it's active and watch it being used:  
+`docker exec -it srcs-wordpress-1 sh -c "cd /var/www/html && wp redis <enable or disable>"`  
+`time curl -sk https://<localhost or specific_webpage>/ -o /dev/null`
 
 ### **How AI was used**
 
