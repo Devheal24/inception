@@ -20,12 +20,8 @@ RUN sed -i '/^user /d' /etc/nginx/nginx.conf
 
 EXPOSE 443
 
-RUN addgroup -S appuser && adduser -S appuser -G appuser
+RUN chown -R nginx:nginx /etc/nginx/ssl
 
-RUN mkdir -p /var/lib/nginx/logs /var/log/nginx /run/nginx && \
-    chown -R appuser:appuser /var/lib/nginx /var/log/nginx /run/nginx && \
-    chown -R appuser:appuser /etc/nginx/ssl
-
-USER appuser
+USER nginx
 
 CMD ["nginx", "-g", "daemon off;"]
