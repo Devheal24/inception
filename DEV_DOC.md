@@ -115,6 +115,16 @@ See the [Instructions](README.md#instructions) section of the README for
 the full list of available `make` targets (`up`, `down`, `stop`, `start`,
 `restart`, `logs`, `ps`, `clean`, `fclean`, `re`).
 
+### About `image:` in `docker-compose.yml`
+
+Each service (`nginx`, `wordpress`, `mariadb`, `adminer`, `redis`,
+`static_webpage`) sets both `image: <service-name>` and its own `build:`
+context.  
+When a service defines `build:`, Compose never pulls `image:` from a registry — it always builds from the local Dockerfile and simply tags the result with that name.  
+`image:` here is only a label for the locally built image, not a Docker Hub reference, so this doesn't violate the "no pre-built images" rule.  
+This can be checked directly: `docker history nginx` shows the image's layers coming from the pinned Alpine base and
+this project's own `RUN`/`COPY` instructions, with no trace of the official `nginx` image.
+
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
 ---
