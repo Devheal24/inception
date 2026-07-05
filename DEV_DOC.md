@@ -33,16 +33,17 @@ is commented out, pointing to the `secrets/*.txt` file that actually
 provides that value (see [Secrets](#secrets) below).
 
 The base Alpine image is **not** in `.env`: it is hardcoded, pinned to a
-specific tested digest, directly in `srcs/docker-compose.yml`'s three
-`build.args`. This is deliberate — even though `.env` is tracked here, its
+specific tested digest, directly in `srcs/docker-compose.yml`'s six
+`build.args` (one per service: nginx, wordpress, mariadb, adminer, redis,
+static_webpage).  
+This is deliberate — even though `.env` is tracked here, its
 purpose is per-deployment config (domain name, WordPress titles/usernames),
 not a fixed build constant; putting the Alpine digest in the tracked
 compose file guarantees every developer and the grader build from the
-exact same, tested base image regardless of `.env`. Every Dockerfile in
-this project uses `apk` and other Alpine-specific tooling, so pointing it
+exact same, tested base image regardless of `.env`.  
+Every Dockerfile in this project uses `apk` and other Alpine-specific tooling, so pointing it
 at a different distro (e.g. Debian) or even a different Alpine tag/digest
-would break the build — don't edit
-those three lines in `docker-compose.yml`.
+would break the build — don't edit those six lines in `docker-compose.yml`.
 
 ### Secrets
 

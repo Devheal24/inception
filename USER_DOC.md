@@ -13,8 +13,10 @@
 
 # <span style="color:white">Understand what services are provided by the stack</span>
 
-The stack is made of three containers, each with a single responsibility:
+The stack is made of six containers: three mandatory ones and three bonus
+ones.
 
+Mandatory:
 - **NGINX** is the only entry point to the stack. It is a web server / reverse
   proxy that serves everything over TLS (v1.3 only) on port 443, using a
   self-signed certificate for `mgarnier.42.fr`. It serves static files
@@ -28,6 +30,16 @@ The stack is made of three containers, each with a single responsibility:
   that stores everything WordPress needs: posts/pages, users, settings.
   Like WordPress, it has no web server in its container and is only
   reachable from other containers on the internal Docker network.
+
+Bonus, all reachable only through NGINX (none of them publish their own
+host port):
+- **Adminer** is a lightweight database admin GUI, at
+  **https://mgarnier.42.fr/adminer.php** — use it to browse/edit the
+  MariaDB database directly.
+- **Redis** is an in-memory object cache for WordPress (via the
+  `redis-cache` plugin), transparent to visitors — it has no exposed URL.
+- **A static webpage**, a second, independent site served at
+  **https://mgarnier.42.fr/mywebpage/**.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -125,8 +137,10 @@ never be committed.
 # <span style="color:white">Check that the services are running correctly</span>
 
 - `make ps` (or `docker compose ps`): lists the project's containers and
-  their status. A healthy stack shows all three containers as `Up`, with
-  `mariadb` additionally showing `(healthy)` once its startup checks pass.
+  their status. A healthy stack shows all six containers as `Up`, with
+  `mariadb`, `wordpress`, `adminer` and `redis` additionally showing
+  `(healthy)` once their startup checks pass (`nginx` and
+  `static_webpage` have no healthcheck defined).
 - `docker ps` (`-a` to include stopped containers) gives the same kind of
   status information at the whole-machine level, not just for this project.
 - `make logs` (or `docker compose logs -f`): follow the logs of every

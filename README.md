@@ -145,7 +145,8 @@ Check it's active and watch it being used:
 - **ChatGPT** helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
 
 - **Claude** helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.  
-It also helped me to regularly test my program, point out errors and write my commit.
+It also helped me to regularly test my program, point out errors and write my commit.  
+For some bonus parts (Redis wiring, nginx config fixes), I also asked Claude to write or fix the Dockerfile/docker-compose/nginx.conf code directly, then verified it myself by rebuilding and testing.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -231,6 +232,14 @@ The two folders are linked together, making it possible to share files between t
 This one is created when the container runs, via the command: <code>docker run -it --rm --tmpfs /folder_name:rw,size=64m alpine sh</code>.  
 It is an internal container volume, stored in RAM only, and it is destroyed at the same time as the container.
 </details>
+
+This project's `mariadb_data`/`wordpress_data` are actually a hybrid of the
+first two: standard named volumes (managed with `docker volume`) whose
+`driver_opts` (`type: none, o: bind, device: <host path>`) point them at a
+fixed host directory — combining the named-volume lifecycle with a bind
+mount's fixed, known location on disk. See
+[`DEV_DOC.md`](DEV_DOC.md#identify-where-the-project-data-is-stored-and-how-it-persists)
+for the actual configuration.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
