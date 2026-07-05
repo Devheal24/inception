@@ -4,7 +4,6 @@ networks:
 
 
 services:
-
 # NGINX
   nginx:
     image: nginx
@@ -31,7 +30,6 @@ services:
     volumes:
       - wordpress_data:/var/www/html:ro
     restart: on-failure
-
 # WORDPRESS
   wordpress:
     image: wordpress
@@ -63,7 +61,6 @@ services:
     volumes:
       - wordpress_data:/var/www/html
     restart: on-failure
-
 # MARIADB
   mariadb:
     image: mariadb
@@ -89,7 +86,6 @@ services:
     volumes:
       - mariadb_data:/var/lib/mysql
     restart: on-failure
-
 # ADMINER
   adminer:
     image: adminer
@@ -111,7 +107,6 @@ services:
       args:
         ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
     restart: on-failure
-
 # STATIC WEBPAGE
   static_webpage:
     image: static_webpage
@@ -130,7 +125,6 @@ services:
       args:
         ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
     restart: on-failure
-
 # REDIS
   redis:
     image: redis
@@ -149,6 +143,34 @@ services:
       args:
         ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
     restart: on-failure
+# BACKUP
+  backup:
+    image: backup
+    networks:
+      - inception
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'
+          memory: 256M
+        reservations:
+          cpus: '0.25'
+          memory: 128M
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    build:
+      context: ./requirements/bonus/backup
+      args:
+        ALPINE_IMAGE: alpine:3.23@sha256:fd791d74b68913cbb027c6546007b3f0d3bc45125f797758156952bc2d6daf40
+    secrets:
+      - db_password
+    volumes:
+      - wordpress_data:/var/www/html:ro
+      - backup_data:/backups
+    restart: on-failure
+
+
 
 # VOLUMES
 volumes:
@@ -164,6 +186,12 @@ volumes:
       type: none
       o: bind
       device: /home/mgarnier/data/wordpress
+  backup_data:
+    driver: local
+    driver_opts:
+      type: none
+      o: bind
+      device: /home/mgarnier/data/backup
 
 # SECRETS
 secrets:

@@ -29,7 +29,7 @@ help:
 	@echo "  $(CYAN)purge-data$(RESET) $(RED)DESTROY mariadb/wordpress data (fclean first)$(RESET)\n"
 
 all:
-	@mkdir -p $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress
+	@mkdir -p $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress $(DATA_DIR)/backup
 	@$(COMPOSE) up -d --build
 	@printf "${GREEN}==== inception: containers up ====${RESET}\n"
 

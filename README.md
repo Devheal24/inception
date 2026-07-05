@@ -31,17 +31,20 @@ three mandatory containers:
   bootstrapped and configured on first boot with WP-CLI.
 - **MariaDB**, holding the WordPress database, with no web server either.
 
-plus three bonus containers, each reachable only over the internal Docker
+plus four bonus containers, each reachable only over the internal Docker
 network (no extra port published on the host):
 - **Adminer**, a database admin UI proxied through the main NGINX at
   `/adminer.php`.
 - **Redis**, used as WordPress's persistent object cache.
 - A **static webpage**, proxied through the main NGINX at `/mywebpage/`.
+- **Backup**, a cron job dumping the MariaDB database and archiving the
+  WordPress files daily.
 
 Containers communicate over a dedicated Docker network, restart
 automatically on failure, and are subject to CPU/memory limits.  
-Database and website data are kept in two named Docker volumes pinned to
-`/home/mgarnier/data` on the host, so they survive container recreation.  
+Database, website and backup data are kept in three named Docker volumes
+pinned to `/home/mgarnier/data` on the host, so they survive container
+recreation.  
 Credentials (database passwords, WordPress admin password) are handled with
 Docker secrets rather than plain environment variables.
 
@@ -66,7 +69,8 @@ inception/
         └── bonus
             ├── adminer
             ├── redis
-            └── static_webpage
+            ├── static_webpage
+            └── backup
 ```
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -140,13 +144,30 @@ Check it's active and watch it being used:
 `docker exec -it srcs-wordpress-1 sh -c "cd /var/www/html && wp redis <enable or disable>"`  
 `time curl -sk https://<localhost or specific_webpage>/ -o /dev/null`
 
+- **BACKUP**  
+runs `crond` to dump the MariaDB `wordpress` database and archive the
+WordPress files every night, keeping 7 days of backups in a dedicated
+`backup_data` volume.  
+This is the only container in the project that runs as **root** instead
+of a non-root user: busybox's `crond` needs to `setuid`/`setgid` to launch
+a job, even when the job's target user is the same as the one already
+running `crond` — confirmed by tracing it with `strace`, a non-root
+`crond` reads its crontab fine but never actually forks/execs the job.
+Root here is low-risk: the container exposes no port and runs no
+network-facing service, it only opens an outbound connection to `mariadb`
+on a schedule.  
+Trigger a backup manually and inspect the result:  
+`docker exec srcs-backup-1 /usr/local/bin/backup.sh`  
+`docker exec srcs-backup-1 ls -la /backups`  
+`docker exec srcs-backup-1 sh -c "zcat /backups/mariadb_*.sql.gz | grep 'CREATE TABLE'"`
+
 ### **How AI was used**
 
 - **ChatGPT** helps me learn some Docker commands, and how to write a Dockerfile and a docker-compose.
 
 - **Claude** helps me write DEV_DOC.md and USER_DOC.md, gathering all the information I found and regrouping it into an organized document.  
 It also helped me to regularly test my program, point out errors and write my commit.  
-For some bonus parts (Redis wiring, nginx config fixes), I also asked Claude to write or fix the Dockerfile/docker-compose/nginx.conf code directly, then verified it myself by rebuilding and testing.
+For some bonus parts (Redis wiring, nginx config fixes, the backup service's script/crontab), I also asked Claude to write or fix the Dockerfile/docker-compose/nginx.conf code directly, then verified it myself by rebuilding and testing.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 

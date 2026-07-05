@@ -73,16 +73,19 @@ where the setup scripts (`mariadb/tools/setup.sh`,
 
 ### Host data directories
 
-The two named volumes (see below) are pinned to
-`/home/mgarnier/data/mariadb` and `/home/mgarnier/data/wordpress` on the
-host. These directories must exist **and** be owned by the same UID/GID as
-each container's non-root `appuser` before the first start, otherwise the
-container will get permission errors writing to its volume:
+The three named volumes (see below) are pinned to
+`/home/mgarnier/data/mariadb`, `/home/mgarnier/data/wordpress` and
+`/home/mgarnier/data/backup` on the host. These directories must exist
+**and** be owned by the same UID/GID as each container's non-root
+`appuser` before the first start, otherwise the container will get
+permission errors writing to its volume:
 
 ```bash
-mkdir -p /home/mgarnier/data/mariadb /home/mgarnier/data/wordpress
+mkdir -p /home/mgarnier/data/mariadb /home/mgarnier/data/wordpress /home/mgarnier/data/backup
 # match each image's appuser uid:gid, check with: docker compose exec <service> id
 ```
+
+(`backup` is the exception: it runs as root — see [Resources > BONUS](README.md#bonus-in-srcsrequirementsbonus) in the README for why — so its data directory's ownership doesn't matter.)
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
@@ -169,21 +172,23 @@ to it is lost. A Dockerfile's `VOLUME` instruction marks a directory that
 should instead be mounted from outside the container, so its data survives
 even after the container is removed.
 
-This project uses two **named** Docker volumes (not bind mounts) for that
+This project uses three **named** Docker volumes (not bind mounts) for that
 purpose, declared in `srcs/docker-compose.yml`:
 
 | Volume | Mounted in container at | Backed by (host path) |
 |---|---|---|
 | `mariadb_data` | `/var/lib/mysql` (mariadb) | `/home/mgarnier/data/mariadb` |
 | `wordpress_data` | `/var/www/html` (wordpress) | `/home/mgarnier/data/wordpress` |
+| `backup_data` | `/backups` (backup) | `/home/mgarnier/data/backup` |
 
-Both volumes are configured with `driver: local` and `driver_opts` (`type:
-none`, `o: bind`, `device: <host path>`), which pins their data to a fixed
-location under `/home/mgarnier/data` on the host, while still being managed
-as proper named volumes by Docker (as required by the subject — raw bind
-mounts are not allowed for these two). Their actual location can always be
-checked with `docker volume inspect mariadb_data` /
-`docker volume inspect wordpress_data`.
+All three volumes are configured with `driver: local` and `driver_opts`
+(`type: none`, `o: bind`, `device: <host path>`), which pins their data to
+a fixed location under `/home/mgarnier/data` on the host, while still being
+managed as proper named volumes by Docker (as required by the subject for
+`mariadb_data`/`wordpress_data` — raw bind mounts are not allowed for
+those two; `backup_data` follows the same pattern for consistency, though
+it isn't itself a subject requirement). Their actual location can always
+be checked with `docker volume inspect <volume-name>`.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
 
