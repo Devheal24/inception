@@ -11,8 +11,7 @@ RUN apk add --no-cache \
 	curl
 
 RUN mkdir -p /var/www/html && \
-	curl -o /var/www/html/adminer.php -L https://github.com/vrana/adminer/releases/download/v5.4.2/adminer-5.4.2.php && \
-	chmod +x /var/www/html/adminer.php
+	curl -o /var/www/html/adminer.php -L https://github.com/vrana/adminer/releases/download/v5.4.2/adminer-5.4.2.php
 
 EXPOSE 8080
 

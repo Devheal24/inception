@@ -237,8 +237,8 @@ This project's `mariadb_data`/`wordpress_data` are actually a hybrid of the
 first two: standard named volumes (managed with `docker volume`) whose
 `driver_opts` (`type: none, o: bind, device: <host path>`) point them at a
 fixed host directory — combining the named-volume lifecycle with a bind
-mount's fixed, known location on disk. See
-[`DEV_DOC.md`](DEV_DOC.md#identify-where-the-project-data-is-stored-and-how-it-persists)
+mount's fixed, known location on disk.  
+See [`DEV_DOC.md`](DEV_DOC.md#identify-where-the-project-data-is-stored-and-how-it-persists)
 for the actual configuration.
 
 <p align="right" style="font-size: 10px;"><a href="#top">return Title</a></p>
