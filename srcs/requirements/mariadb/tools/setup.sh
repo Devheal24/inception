@@ -18,8 +18,12 @@ if [ ! -d "/var/lib/mysql/mysql" ]; then
     mariadb-install-db --auth-root-authentication-method=normal --datadir=/var/lib/mysql
 
     mariadbd --datadir=/var/lib/mysql --skip-networking &
+    MARIADB_PID=$!
 
-    sleep 5
+    for i in $(seq 1 30); do
+        mariadb-admin -uroot ping --silent >/dev/null 2>&1 && break
+        sleep 1
+    done
 
     mariadb -uroot << EOF
 
@@ -37,6 +41,7 @@ FLUSH PRIVILEGES;
 EOF
 
     mariadb-admin -uroot -p"${MYSQL_ROOT_PASSWORD}" shutdown
+    wait "$MARIADB_PID"
 
 fi
 
