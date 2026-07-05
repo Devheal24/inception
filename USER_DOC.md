@@ -97,16 +97,23 @@ environment variables:
 | `secrets/wp_user_password.txt` | WordPress second (author) user password |
 
 To change a credential: edit the corresponding file (plain text, single
-line), then rebuild so the new value is picked up:
+line), then wipe the persisted data and rebuild so the new value is
+picked up:
 
 ```bash
-make re
+make purge-data
+make all
 ```
 
-`make re` wipes the named volumes along with the containers, so this also
-resets WordPress/MariaDB to a fresh install using the new credentials — it
-is not a way to change a password on an already-configured site without
-losing its data.
+WordPress/MariaDB only set up users and passwords on their *first* run
+(checked by looking for an existing data directory), and that data lives
+in bind-mounted host directories that survive `make re` (`down -v` only
+removes the Docker volume object, not the host files behind it) — so
+`make re` alone leaves the old credentials in place.  
+`make purge-data` actually deletes the host-side MariaDB/WordPress data, so the next
+`make all` bootstraps a fresh install with the new values.  
+This is destructive: it loses all site content and database data, not just the
+credentials.
 
 `secrets/` is listed in `.gitignore` — these files must stay local and
 never be committed.
