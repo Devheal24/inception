@@ -66,8 +66,7 @@ fclean:
 re: fclean all
 
 purge-data: fclean
-	@docker run --rm -v $(DATA_DIR)/mariadb:/target alpine sh -c "rm -rf /target/*"
-	@docker run --rm -v $(DATA_DIR)/wordpress:/target alpine sh -c "rm -rf /target/*"
+	@rm -rf $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress
 	@printf "${GREEN}==== inception: persisted mariadb/wordpress data wiped ====${RESET}\n"
 
 .PHONY: help all build up down stop start restart logs ps clean fclean re purge-data
