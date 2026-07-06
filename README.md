@@ -26,7 +26,7 @@ a lightweight Alpine base image.
 The stack is orchestrated with a single `docker-compose.yml` and made up of
 three mandatory containers:
 - **NGINX**, the only entry point, serving everything over TLS (v1.3 only)
-  with a self-signed certificate for `mgarnier.42.fr`.
+  with a self-signed certificate for `<login>.42.fr`.
 - **WordPress** with **php-fpm** (no web server bundled in this container),
   bootstrapped and configured on first boot with WP-CLI.
 - **MariaDB**, holding the WordPress database, with no web server either.
@@ -43,7 +43,7 @@ network (no extra port published on the host):
 Containers communicate over a dedicated Docker network, restart
 automatically on failure, and are subject to CPU/memory limits.  
 Database, website and backup data are kept in three named Docker volumes
-pinned to `/home/mgarnier/data` on the host, so they survive container
+pinned to `/home/<login>/data` on the host, so they survive container
 recreation.  
 Credentials (database passwords, WordPress admin password) are handled with
 Docker secrets rather than plain environment variables.

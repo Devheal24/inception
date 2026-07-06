@@ -74,14 +74,14 @@ where the setup scripts (`mariadb/tools/setup.sh`,
 ### Host data directories
 
 The three named volumes (see below) are pinned to
-`/home/mgarnier/data/mariadb`, `/home/mgarnier/data/wordpress` and
-`/home/mgarnier/data/backup` on the host. These directories must exist
+`/home/<login>/data/mariadb`, `/home/<login>/data/wordpress` and
+`/home/<login>/data/backup` on the host. These directories must exist
 **and** be owned by the same UID/GID as each container's non-root
 `appuser` before the first start, otherwise the container will get
 permission errors writing to its volume:
 
 ```bash
-mkdir -p /home/mgarnier/data/mariadb /home/mgarnier/data/wordpress /home/mgarnier/data/backup
+mkdir -p /home/<login>/data/mariadb /home/<login>/data/wordpress /home/<login>/data/backup
 # match each image's appuser uid:gid, check with: docker compose exec <service> id
 ```
 
@@ -177,13 +177,13 @@ purpose, declared in `srcs/docker-compose.yml`:
 
 | Volume | Mounted in container at | Backed by (host path) |
 |---|---|---|
-| `mariadb_data` | `/var/lib/mysql` (mariadb) | `/home/mgarnier/data/mariadb` |
-| `wordpress_data` | `/var/www/html` (wordpress) | `/home/mgarnier/data/wordpress` |
-| `backup_data` | `/backups` (backup) | `/home/mgarnier/data/backup` |
+| `mariadb_data` | `/var/lib/mysql` (mariadb) | `/home/<login>/data/mariadb` |
+| `wordpress_data` | `/var/www/html` (wordpress) | `/home/<login>/data/wordpress` |
+| `backup_data` | `/backups` (backup) | `/home/<login>/data/backup` |
 
 All three volumes are configured with `driver: local` and `driver_opts`
 (`type: none`, `o: bind`, `device: <host path>`), which pins their data to
-a fixed location under `/home/mgarnier/data` on the host, while still being
+a fixed location under `/home/<login>/data` on the host, while still being
 managed as proper named volumes by Docker (as required by the subject for
 `mariadb_data`/`wordpress_data` — raw bind mounts are not allowed for
 those two; `backup_data` follows the same pattern for consistency, though

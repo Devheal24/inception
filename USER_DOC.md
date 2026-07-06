@@ -19,7 +19,7 @@ ones.
 Mandatory:
 - **NGINX** is the only entry point to the stack. It is a web server / reverse
   proxy that serves everything over TLS (v1.3 only) on port 443, using a
-  self-signed certificate for `mgarnier.42.fr`. It serves static files
+  self-signed certificate for `<login>.42.fr`. It serves static files
   directly and forwards `.php` requests to WordPress.
 - **WordPress + php-fpm**: WordPress is the CMS/blogging software that
   powers the site; `php-fpm` (PHP FastCGI Process Manager) is the process
@@ -33,12 +33,12 @@ Mandatory:
 
 Bonus, none of them publish their own host port:
 - **Adminer** is a lightweight database admin GUI, reached through NGINX at
-  **https://mgarnier.42.fr/adminer.php** — use it to browse/edit the
+  **https://<login>.42.fr/adminer.php** — use it to browse/edit the
   MariaDB database directly.
 - **Redis** is an in-memory object cache for WordPress (via the
   `redis-cache` plugin), transparent to visitors — it has no exposed URL.
 - **A static webpage**, a second, independent site served through NGINX at
-  **https://mgarnier.42.fr/mywebpage/**.
+  **https://<login>.42.fr/mywebpage/**.
 - **Backup** runs a nightly cron job that dumps the MariaDB database and
   archives the WordPress files into `~/data/backup` — it has no exposed
   URL either, it only connects out to `mariadb`.
@@ -71,18 +71,18 @@ These targets wrap the underlying Docker Compose commands:
 
 # <span style="color:white">Access the website and the administration panel</span>
 
-The site is served at **https://mgarnier.42.fr**. For the hostname to
+The site is served at **https://<login>.42.fr**. For the hostname to
 resolve on your machine, it needs an entry in `/etc/hosts` pointing to the
 host running the stack:
 
 ```
-127.0.0.1 mgarnier.42.fr
+127.0.0.1 <login>.42.fr
 ```
 
 The TLS certificate is self-signed, so the browser will show a security
 warning on first visit — this is expected, accept the exception to continue.
 
-The WordPress administration panel is at **https://mgarnier.42.fr/wp-admin**.
+The WordPress administration panel is at **https://<login>.42.fr/wp-admin**.
 Two accounts exist:
 - `WP_ADMIN` (administrator role) — full access to the admin panel (themes,
   plugins, users, settings...).
