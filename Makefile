@@ -66,7 +66,8 @@ fclean:
 re: fclean all
 
 purge-data: fclean
-	@rm -rf $(DATA_DIR)/mariadb $(DATA_DIR)/wordpress
+	@sudo rm -rf $(DATA_DIR)/mariadb
+	@sudo rm -rf $(DATA_DIR)/wordpress
 	@printf "${GREEN}==== inception: persisted mariadb/wordpress data wiped ====${RESET}\n"
 
 .PHONY: help all build up down stop start restart logs ps clean fclean re purge-data
