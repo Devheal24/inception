@@ -44,6 +44,9 @@ if [ ! -f "wp-config.php" ]; then
 
     wp config set WP_REDIS_HOST redis
 
+    wp config set WP_HOME '"https://" . $_SERVER["HTTP_HOST"]' --raw
+    wp config set WP_SITEURL '"https://" . $_SERVER["HTTP_HOST"]' --raw
+
     wp core install \
         --url=${DOMAIN_NAME} \
         --title=${WP_TITLE} \
